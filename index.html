@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Halaman Terkunci!!</title>
+    
+    <meta property="og:title" content="Halaman Terkunci!! 🔐">
+    <meta property="og:description" content="Haii Ayangg! Masukkan kata sandi dulu ya untuk masuk ke halaman ini.. ❤️">
+    <meta property="og:image" content="https://kkykrnwn.github.io/mypacar/img/icon.ico">
+    <meta property="og:type" content="website">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
 
     <link rel="shortcut icon" type="image/x-icon" href="./img/icon.ico">
-    
+
     <style>
+        /* CSS tetap sama seperti kode kamu sebelumnya */
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -18,7 +27,7 @@
             background: #222 url('./img/papayang.png') no-repeat center center/cover;
             overflow: hidden;
         }
-
+        /* ... sisa CSS kamu ... */
         .container {
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
@@ -30,82 +39,16 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
             animation: fadeIn 1s ease-in-out;
         }
-
         h2 { color: #fff; font-weight: 600; margin-bottom: 20px; }
-
-        .password-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-            padding-right: 45px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            outline: none;
-        }
-
-        .eye-icon {
-            position: absolute;
-            right: 12px;
-            cursor: pointer;
-            width: 22px;
-            height: 22px;
-            fill: white;
-            opacity: 0.8;
-        }
-
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        input { width: 100%; padding: 12px; padding-right: 45px; border: none; border-radius: 8px; font-size: 16px; background: rgba(255, 255, 255, 0.2); color: #fff; outline: none; }
+        .eye-icon { position: absolute; right: 12px; cursor: pointer; width: 22px; height: 22px; fill: white; opacity: 0.8; }
         .hidden { display: none; }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 8px;
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .error {
-            color: #ff4b2b;
-            font-size: 14px;
-            margin-top: 10px;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
+        button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .error { color: #ff4b2b; font-size: 14px; margin-top: 10px; opacity: 0; transition: opacity 0.5s; }
         .error.show { opacity: 1; }
-
-        .popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #28a745;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            z-index: 100;
-        }
-
-        .countdown {
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-            display: none;
-        }
-
+        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 20px; border-radius: 8px; z-index: 100; }
+        .countdown { color: #fff; font-size: 16px; font-weight: bold; margin-top: 10px; display: none; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
@@ -144,16 +87,13 @@
 </div>
 
 <script>
-    // Logika ANTI CACHE: Memaksa halaman refresh total saat ditekan tombol kembali
+    // Script tetap sama seperti kode kamu sebelumnya
     (function () {
         window.onpageshow = function(event) {
-            if (event.persisted) {
-                window.location.reload();
-            }
+            if (event.persisted) { window.location.reload(); }
         };
     })();
 
-    // Tambahan: Mengosongkan input setiap kali halaman dimuat (mencegah sisa teks)
     window.onload = function() {
         document.getElementById("password").value = "";
     };
@@ -170,7 +110,6 @@
         const passwordInput = document.getElementById("password");
         const eyeOpen = document.getElementById("eyeOpen");
         const eyeClosed = document.getElementById("eyeClosed");
-
         if (passwordInput.type === "password") {
             passwordInput.type = "text";
             eyeOpen.classList.add("hidden");
@@ -193,26 +132,17 @@
             errorMessage.textContent = "✅ Kata sandi benar!";
             errorMessage.classList.add("show");
             document.getElementById("success-popup").classList.remove("hidden");
-            
-            // Pindah halaman
-            setTimeout(() => { 
-                window.location.href = "./file/utama.html"; 
-            }, 2000);
-
+            setTimeout(() => { window.location.href = "./file/utama.html"; }, 2000);
         } else {
             attempts++;
             errorMessage.textContent = `❌ Salah! Sisa: ${maxAttempts - attempts}`;
             errorMessage.classList.add("show");
-            
-            // Reset input jadi kosong jika salah
             passwordInput.value = "";
-            
             if (attempts >= maxAttempts) {
                 passwordInput.disabled = true;
                 button.disabled = true;
                 countdownMessage.style.display = "block";
                 audio.play();
-
                 let count = 10;
                 let timer = setInterval(() => {
                     countdownMessage.textContent = `Mengalihkan dalam ${count}...`;
