@@ -4,565 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Halaman Auliaaa</title>
-    
     <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
 
-    <script>
-        let colors = ["🔴", "🟠", "🟡", "🟢", "🔵", "🟣"]; // Emoji warna-warni
-        let titleText = "Halaman Auliaa";
-        let i = 0;
-
-        setInterval(() => {
-            document.title = colors[i % colors.length] + " " + titleText + " " + colors[i % colors.length];
-            i++;
-        }, 1000); // Ganti setiap 1 detik
-    </script>
     <style>
-        /* Gaya umum */
+        :root {
+            --glass: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --accent: #89cff0;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         body {
-            font-family: Arial, sans-serif;
-            background-size: 100% auto;
-            background-position: top center;
-            background-attachment: fixed;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            transition: background-image 0.5s ease-in-out; /* Efek transisi halus */
-            
-/* Mencegah seleksi teks dan drag pada gambar */
-    -webkit-user-select: none;  /* Chrome, Safari, Opera */
-    -moz-user-select: none;     /* Firefox */
-    -ms-user-select: none;      /* IE/Edge */
-    user-select: none;          /* Standard */
-    -webkit-touch-callout: none; /* Mencegah menu konteks di iOS (Save Image) */
-}
-
-img {
-    pointer-events: none;       /* Gambar tidak bisa diklik/di-drag */
-}
-
-        /* Header */
-        header {
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0; padding: 0; color: white; text-align: center;
+            min-height: 200vh; /* Agar bisa scroll */
+            background-size: cover; background-position: center;
+            background-attachment: fixed; transition: background-image 1.2s ease;
+            user-select: none; -webkit-user-select: none; overflow-x: hidden;
         }
 
-        /* Daftar */
-        section {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            border-radius: 10px;
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.4); z-index: -1;
         }
 
-        ul {
-            list-style: none;
-            padding: 0;
+        /* Efek Silau Matahari (Sun Blind) */
+        #sun-blind {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none; z-index: 9999;
+            clip-path: circle(0% at 50% 50%);
+            transition: opacity 0.2s ease, clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        li {
-            margin: 10px 0;
-            font-size: 18px;
+        #sun-blind.active {
+            opacity: 1;
+            clip-path: circle(150% at var(--x) var(--y));
         }
 
-        /* Tombol Transparan */
-        .transparent-button {
-            padding: 10px 15px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
+        /* Animasi Judul Turun */
+        header { 
+            padding: 80px 20px 40px; 
+            transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.8s;
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        header.visible { transform: translateY(0); opacity: 1; }
+
+        header h1 { font-weight: 300; letter-spacing: 4px; text-shadow: 0 4px 15px rgba(0,0,0,0.6); margin: 0; }
+
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        /* Grid & Item Naik */
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-bottom: 150px;
+        }
+
+        .file-item {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px 10px;
             cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
-        }
-
-        .transparent-button:hover {
-            background: rgba(255, 255, 255, 0.4);
-        }
-        
-        /* Animasi saat tombol diklik */
-@keyframes buttonClickAnimation {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.transparent-button:active {
-    animation: buttonClickAnimation 0.3s ease;
-}
-
-        /* Footer */
-        footer {
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+            opacity: 0; 
+            transform: translateY(60px); /* Standby di bawah */
             position: relative;
-            bottom: 0;
-            width: 95%;
         }
-        
-        /* Animasi fade-in untuk elemen saat di-scroll */
-.fade-in {
-    opacity: 0;
-    transform: translateY(50px); /* Elemen akan bergeser sedikit ke bawah */
-    transition: opacity 1s ease, transform 1s ease; /* Durasi transisi */
-}
 
-/* Saat elemen sudah terlihat di viewport */
-.fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
+        /* Saat di-scroll atau awal muncul */
+        .file-item.visible { opacity: 1; transform: translateY(0); }
 
-/* Animasi fade-in dan slide-up */
-.fade-in {
-    opacity: 0;
-    transform: translateY(50px); /* Bergeser ke bawah */
-    transition: opacity 1s ease, transform 1s ease;
-}
+        .file-item:active { transform: scale(0.9) !important; background: white; }
 
-/* Animasi scale dan fade-in */
-.scale-in {
-    opacity: 0;
-    transform: scale(0.5); /* Menyusut sedikit */
-    transition: opacity 1s ease, transform 1s ease;
-}
+        .file-number {
+            font-size: 10px; background: var(--accent); color: #000;
+            padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-bottom: 10px;
+        }
+        .file-name { font-size: 14px; pointer-events: none; text-transform: capitalize; }
 
-/* Animasi rotasi dan fade-in */
-.rotate-in {
-    opacity: 0;
-    transform: rotate(45deg);
-    transition: opacity 1s ease, transform 1s ease;
-}
+        /* Footer & Info */
+        footer { padding: 60px 20px; background: rgba(0, 0, 0, 0.8); font-size: 12px; }
+        footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
-/* Saat elemen terlihat di viewport, tambahkan kelas visible */
-.fade-in.visible, .scale-in.visible, .rotate-in.visible {
-    opacity: 1;
-    transform: translateY(0); /* Elemen kembali ke posisi semula */
-}
-
-/* Efek scale-in saat elemen terlihat */
-.scale-in.visible {
-    transform: scale(1);
-}
-
-/* Efek rotasi saat elemen terlihat */
-.rotate-in.visible {
-    transform: rotate(0deg);
-}
-
-    .cool-music-button {
-      background: linear-gradient(90deg, #845ef7, #5f3dc4);
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 0px;
-      box-shadow: 0 0 15px rgba(132, 94, 247, 0.6);
-      transition: all 0.3s ease;
-    }
-
-    .cool-music-button:hover {
-      background: linear-gradient(90deg, #9775fa, #6741d9);
-      transform: scale(1.05);
-    }
-    
-    /* Gaya untuk jam di kiri bawah */
-#clock {
-    position: fixed;
-    bottom: 10px;
-    left: 20px;
-    font-size: 12px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgba(137, 207, 240, 0.6);
-    z-index: 9999;
-}
-
-/* Gaya untuk tanggal di kanan bawah */
-#date {
-    position: fixed;
-    bottom: 10px;
-    right: 20px;
-    font-size: 12px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: rgba(137, 207, 240, 0.6);
-    line-height: 1.3;
-    letter-spacing: -1.0px;
-    z-index: 9999;
-}
+        #clock, #date {
+            position: fixed; bottom: 15px; font-size: 11px; color: var(--accent);
+            background: rgba(0,0,0,0.6); padding: 6px 15px; border-radius: 20px;
+            backdrop-filter: blur(8px); z-index: 1000; border: 1px solid var(--glass-border);
+        }
+        #clock { left: 15px; }
+        #date { right: 15px; }
 
     </style>
 </head>
-<body>
-    <!-- Judul -->
-    <header>
-        <h1>Selamat Datang di Halaman html Auliaa</h1>
+<body oncontextmenu="return false;">
+
+    <div id="sun-blind"></div>
+
+    <header id="header">
+        <h1>Aulia's Library</h1>
     </header>
 
-    <!-- Daftar dengan Tombol Transparan -->
-    <section>
-    <h2>Daftar File</h2>
-        <ul>
-            <li>
-                1 
-                <a href="cobabagi.html" target="_blank">
-                    <button class="transparent-button">aku pelupa</button>
-                </a>
-            </li>
-            <li>
-                2 
-                <a href="akutakut.html" target="_blank">
-                    <button class="transparent-button">aku takut😖</button>
-                </a>
-            </li>
-            <li>
-                3 
-                <a href="apakahpernah.html" target="_blank">
-                    <button class="transparent-button">apakah pernah?</button>
-                </a>
-            </li>
-            <li>
-                4 
-                <a href="asalkamutau.html" target="_blank">
-                    <button class="transparent-button">asal kamu tau</button>
-                </a>
-            </li>
-            <li>
-                5 
-                <a href="kamuapa.html" target="_blank">
-                    <button class="transparent-button">ayang apa?</button>
-                </a>
-            </li>
-            <li>
-                6 
-                <a href="buatkamuaja.html" target="_blank">
-                    <button class="transparent-button">boleh gak?</button>
-                </a>
-            </li>
-            <li>
-                7 
-                <a href="boroboro.html" target="_blank">
-                    <button class="transparent-button">boro boro</button>
-                </a>
-            </li>
-            <li>
-                8 
-                <a href="buatsayangku.html" target="_blank">
-                    <button class="transparent-button">buat sayangkuu</button>
-                </a>
-            </li>
-            <li>
-                9 
-                <a href="cemungut.html" target="_blank">
-                    <button class="transparent-button">cemunguttt</button>
-                </a>
-            </li>
-            <li>
-                10 
-                <a href="challenge.html" target="_blank">
-                    <button class="transparent-button">challenge</button>
-                </a>
-            </li>
-            <li>
-                11 
-                <a href="cobatebak.html" target="_blank">
-                    <button class="transparent-button">coba tebakk</button>
-                </a>
-            </li>
-            <li>
-                12 
-                <a href="hadiahterbesar.html" target="_blank">
-                    <button class="transparent-button">hadiah terbesarku</button>
-                </a>
-            </li>
-            <li>
-                13 
-                <a href="haibuatkamu.html" target="_blank">
-                    <button class="transparent-button">haii ayangg</button>
-                </a>
-            </li>
-            <li>
-                14 
-                <a href="jikananti.html" target="_blank">
-                    <button class="transparent-button">jika nanti</button>
-                </a>
-            </li>
-            <li>
-                15 
-                <a href="kaloada.html" target="_blank">
-                    <button class="transparent-button">kalo ada</button>
-                </a>
-            </li>
-            <li>
-                16 
-                <a href="maaf.html" target="_blank">
-                    <button class="transparent-button">maaf 🥺</button>
-                </a>
-            </li>
-            <li>
-                17 
-                <a href="maafjika.html" target="_blank">
-                    <button class="transparent-button">maaf jika</button>
-                </a>
-            </li>
-            <li>
-                18 
-                <a href="dibacadong.html" target="_blank">
-                    <button class="transparent-button">maaf yaaa</button>
-                </a>
-            </li>
-            <li>
-                19 
-                <a href="terimakasih.html" target="_blank">
-                    <button class="transparent-button">makasii</button>
-                </a>
-            </li>
-            <li>
-                20 
-                <a href="dibacayuk.html" target="_blank">
-                    <button class="transparent-button">makasii yaa</button>
-                </a>
-            </li>
-            <li>
-                21 
-                <a href="untukmu.html" target="_blank">
-                    <button class="transparent-button">mau nanya nihh</button>
-                </a>
-            </li>
-            <li>
-                22 
-                <a href="akupanik.html" target="_blank">
-                    <button class="transparent-button">melupakanmu?</button>
-                </a>
-            </li>
-            <li>
-                23 
-                <a href="memorygame.html" target="_blank">
-                    <button class="transparent-button">memory game</button>
-                </a>
-            </li>
-            <li>
-                24 
-                <a href="akuminta.html" target="_blank">
-                    <button class="transparent-button">minta thr 😋</button>
-                </a>
-            </li>
-            <li>
-                25 
-                <a href="hanyabuatmu.html" target="_blank">
-                    <button class="transparent-button">penghargaan</button>
-                </a>
-            </li>
-            <li>
-                26 
-                <a href="pesanbuatayang.html" target="_blank">
-                    <button class="transparent-button">pesan buat ayang</button>
-                </a>
-            </li>
-            <li>
-                27 
-
-                <a href="dariku.html" target="_blank">
-                    <button class="transparent-button">pesan buat ayangg</button>
-                </a>
-            </li>
-            <li>
-                28 
-                <a href="heikm.html" target="_blank">
-                    <button class="transparent-button">pilih warna apa?</button>
-                </a>
-            </li>
-            <li>
-                29 
-                <a href="sayangi.html" target="_blank">
-                    <button class="transparent-button">pilih mana hayoo</button>
-                </a>
-            </li>
-            <li>
-                30 
-                <a href="pokoknya.html" target="_blank">
-                    <button class="transparent-button">pokoknya</button>
-                </a>
-            </li>
-            <li>
-                31 
-                <a href="sygbanget.html" target="_blank">
-                    <button class="transparent-button">sayang bangett</button>
-                </a>
-            </li>
-            <li>
-                32 
-                <a href="bukabentarya.html" target="_blank">
-                    <button class="transparent-button">sayang sama aku?</button>
-                </a>
-            </li>
-            <li>
-                33 
-                <a href="semangat.html" target="_blank">
-                    <button class="transparent-button">semangatt</button>
-                </a>
-            </li>
-            <li>
-                34 
-                <a href="heibuka.html" target="_blank">
-                    <button class="transparent-button">sesuatu buat ayang</button>
-                </a>
-            </li>
-            <li>
-                35 
-                <a href="hitungan.html" target="_blank">
-                    <button class="transparent-button">Simsalabim!! 🥳</button>
-                </a>
-            </li>
-            <li>
-                36 
-                <a href="tangkap.html" target="_blank">
-                    <button class="transparent-button">tangkap</button>
-                </a>
-            </li>
-        </ul>
-    </section>
-    
-<!--    <section>
-        <button onclick="window.open('music.html', '_blank')" class="cool-music-button">
-    Pemutar Musik
-  </button>
-  </section> --!>
-
-    <!-- Penutup -->
-    <footer>
-
-    <div class="container">
-
-      <div class="row">
-
-        <div class="col-lg-12">
-
-          <p>Copyright © 2026 All Rights Reserved. 
-
-          
-
-          <br>Designed by <a title="Kikyy & Auliaa" rel="sponsored" href="https://www.instagram.com/kky_krnwn331?igsh=MW9yZnF6YXY2YmsxZg==" target="_blank">Kikyy</a> untuk 
-          <a title="Kikyy & Auliaa" rel="sponsored" href="https://instagram.com/liaagsttn" target="_blank">Auliaa</a></p>
-        </div>
-
-      </div>
-
+    <div class="main-container">
+        <div class="file-grid" id="fileGrid"></div>
     </div>
 
-  </footer>
-  
-  <div id="clock"></div>
-  <div id="date"></div>
-  
-  <script> // Preload audio agar tidak ada delay saat tombol ditekan
-  const clickSound = new Audio('isi_url_suara');
+    <footer>
+        <p>Copyright © 2025 All Rights Reserved.<br>
+        Designed by <a href="https://instagram.com/kky_krnwn331" target="_blank">Kikyy</a> untuk 
+        <a href="https://instagram.com/liaagsttn" target="_blank">Auliaa</a></p>
+    </footer>
 
-  function playClickSound() {
-      let soundClone = clickSound.cloneNode(); // Mengkloning audio agar bisa diputar berulang tanpa delay
-      soundClone.play();
-  }
+    <div id="clock">00:00</div>
+    <div id="date">...</div>
 
-  // Menambahkan event listener pada semua tombol
-  document.querySelectorAll('.transparent-button, .dropdown-content button').forEach(button => {
-      button.addEventListener('click', playClickSound);
-  });
-  
-
-    // Script JavaScript untuk Mengganti Musik
-
-        function gantiMusik(file) {
-            let audioPlayer = document.getElementById("audioPlayer");
-            let audioSource = document.getElementById("audioSource");
-            audioSource.src = file;
-            audioPlayer.load();
-            audioPlayer.play();
-        }
-
-        // Mencegah zoom menggunakan gesture pada perangkat mobile
-        document.addEventListener('gesturestart', function (e) {
-            e.preventDefault();
-        });
-
-        // Mencegah zoom dengan kombinasi ctrl + scroll di desktop
-        document.addEventListener('wheel', function (e) {
-            if (e.ctrlKey) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        // Mencegah zoom menggunakan pinch-to-zoom pada perangkat mobile
-        document.addEventListener('touchmove', function (e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        //wallpaper
-        const wallpapers = [
-        '../img/papayang1.png',
-        '../img/papayang2.png',
-        '../img/papayang3.png',
-        '../img/papayang4.png',
-        '../img/papayang5.png',
-        '../img/papayang6.png',
-        '../img/papayang7.png',
-        '../img/papayang8.png',
-        '../img/papayang9.png',
-        '../img/papayang10.png',
-        '../img/papayang11.png'
+    <script>
+        const files = [
+            { id: 1, name: "aku pelupa", url: "cobabagi.html" }, { id: 2, name: "aku takut😖", url: "akutakut.html" },
+            { id: 3, name: "apakah pernah?", url: "apakahpernah.html" }, { id: 4, name: "asal kamu tau", url: "asalkamutau.html" },
+            { id: 5, name: "ayang apa?", url: "kamuapa.html" }, { id: 6, name: "boleh gak?", url: "buatkamuaja.html" },
+            { id: 7, name: "boro boro", url: "boroboro.html" }, { id: 8, name: "buat sayangkuu", url: "buatsayangku.html" },
+            { id: 9, name: "cemunguttt", url: "cemungut.html" }, { id: 10, name: "challenge", url: "challenge.html" },
+            { id: 11, name: "coba tebakk", url: "cobatebak.html" }, { id: 12, name: "hadiah terbesarku", url: "hadiahterbesar.html" },
+            { id: 13, name: "haii ayangg", url: "haibuatkamu.html" }, { id: 14, name: "jika nanti", url: "jikananti.html" },
+            { id: 15, name: "kalo ada", url: "kaloada.html" }, { id: 16, name: "maaf 🥺", url: "maaf.html" },
+            { id: 17, name: "maaf jika", url: "maafjika.html" }, { id: 18, name: "maaf yaaa", url: "dibacadong.html" },
+            { id: 19, name: "makasii", url: "terimakasih.html" }, { id: 20, name: "makasii yaa", url: "dibacayuk.html" },
+            { id: 21, name: "mau nanya nihh", url: "untukmu.html" }, { id: 22, name: "melupakanmu?", url: "akupanik.html" },
+            { id: 23, name: "memory game", url: "memorygame.html" }, { id: 24, name: "minta thr 😋", url: "akuminta.html" },
+            { id: 25, name: "penghargaan", url: "hanyabuatmu.html" }, { id: 26, name: "pesan buat ayang", url: "pesanbuatayang.html" },
+            { id: 27, name: "pesan buat ayangg", url: "dariku.html" }, { id: 28, name: "pilih warna apa?", url: "heikm.html" },
+            { id: 29, name: "pilih mana hayoo", url: "sayangi.html" }, { id: 30, name: "pokoknya", url: "pokoknya.html" },
+            { id: 31, name: "sayang bangett", url: "sygbanget.html" }, { id: 32, name: "sayang sama aku?", url: "bukabentarya.html" },
+            { id: 33, name: "semangatt", url: "semangat.html" }, { id: 34, name: "sesuatu buat ayang", url: "heibuka.html" },
+            { id: 35, name: "Simsalabim!! 🥳", url: "hitungan.html" }, { id: 36, name: "tangkap", url: "tangkap.html" }
         ];
 
-        let index = 0;
-        function gantiWallpaper() {
-            document.body.style.backgroundImage = `url('${wallpapers[index]}')`;
-            index = (index + 1) % wallpapers.length;
-        }
+        const grid = document.getElementById('fileGrid');
+        const sunBlind = document.getElementById('sun-blind');
+        const header = document.getElementById('header');
 
-        setInterval(gantiWallpaper, 7000); // Ganti setiap 7 detik
+        // Render Cards
+        files.forEach((file) => {
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `<span class="file-number">${file.id}</span><span class="file-name">${file.name}</span>`;
+            
+            // Logika Klik + Efek Matahari
+            item.addEventListener('click', (e) => {
+                const x = e.clientX;
+                const y = e.clientY;
+                sunBlind.style.setProperty('--x', x + 'px');
+                sunBlind.style.setProperty('--y', y + 'px');
+                sunBlind.classList.add('active');
 
-        // Pencegahan zoom
-        document.addEventListener('gesturestart', e => e.preventDefault());
-        document.addEventListener('wheel', e => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
-        document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
-        
-        function handleScrollAnimation() {
-            const elements = document.querySelectorAll('.fade-in, .scale-in, .rotate-in');
-            elements.forEach(element => {
-                const rect = element.getBoundingClientRect();
-                if (rect.top >= 0 && rect.bottom <= window.innerHeight) {
-                    element.classList.add('visible');
+                setTimeout(() => {
+                    window.open(file.url, '_blank');
+                    setTimeout(() => { sunBlind.classList.remove('active'); }, 600);
+                }, 500);
+            });
+
+            grid.appendChild(item);
+        });
+
+        // Intersection Observer untuk Animasi Scroll
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 } else {
-                    element.classList.remove('visible');
+                    // Animasi balik saat scroll ke atas
+                    entry.target.classList.remove('visible');
                 }
             });
+        }, observerOptions);
+
+        // Amati Header dan Semua Item File
+        observer.observe(header);
+        document.querySelectorAll('.file-item').forEach(el => observer.observe(el));
+
+        // Background
+        const wallpapers = Array.from({length: 11}, (_, i) => `../img/papayang${i+1}.png`);
+        let wpIndex = 0;
+        function changeBG() {
+            document.body.style.backgroundImage = `url('${wallpapers[wpIndex]}')`;
+            wpIndex = (wpIndex + 1) % wallpapers.length;
         }
-        window.addEventListener('scroll', handleScrollAnimation);
-        document.addEventListener('DOMContentLoaded', handleScrollAnimation);
+        setInterval(changeBG, 7000); changeBG();
+
+        // Clock
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            document.getElementById('date').innerText = now.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
+        }
+        setInterval(updateTime, 1000); updateTime();
         
-        function updateClockAndDate() {
-        const now = new Date();
-        const jam = now.getHours().toString().padStart(2, '0');
-        const menit = now.getMinutes().toString().padStart(2, '0');
-        document.getElementById('clock').textContent = `${jam}:${menit}`;
-
-        const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-        document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
-    }
-
-    setInterval(updateClockAndDate, 1000);
-    updateClockAndDate(); // Panggil langsung agar tidak nunggu 1 detik pertama
-
+        // Mencegah klik saat scroll berat
+        let isScrolling;
+        window.addEventListener('scroll', () => {
+            document.body.classList.add('is-scrolling');
+            clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => { document.body.classList.remove('is-scrolling'); }, 150);
+        });
     </script>
 </body>
-    </html>
+</html>
