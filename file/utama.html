@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Halaman Auliaaa</title>
-    <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="/img/icon.ico">
 
     <style>
         :root {
@@ -18,31 +18,43 @@
         body {
             font-family: 'Segoe UI', sans-serif;
             margin: 0; padding: 0; color: white; text-align: center;
-            min-height: 200vh; /* Agar bisa scroll */
-            background-size: cover; background-position: center;
-            background-attachment: fixed; transition: background-image 1.2s ease;
-            user-select: none; -webkit-user-select: none; overflow-x: hidden;
+            min-height: 100vh;
+            user-select: none; -webkit-user-select: none;
+            background-color: #000; /* Cadangan jika gambar belum dimuat */
         }
 
-        body::before {
-            content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.4); z-index: -1;
+        /* PERBAIKAN BACKGROUND: Diam total & No-Gap */
+        #bg-container {
+            position: fixed;
+            top: -5%; left: -5%;
+            width: 110%; height: 110%; /* Lebih besar sedikit untuk cegah blank putih saat bounce scroll */
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 1.2s ease-in-out;
+            will-change: background-image;
+            transform: translateZ(0); /* Optimasi GPU */
         }
 
-        /* Efek Silau Matahari (Sun Blind) */
+        /* Overlay Gelap yang ikut diam */
+        #bg-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: -1;
+        }
+
+        /* Efek Matahari Buta */
         #sun-blind {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; opacity: 0; pointer-events: none; z-index: 9999;
             clip-path: circle(0% at 50% 50%);
-            transition: opacity 0.2s ease, clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s ease, clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        #sun-blind.active { opacity: 1; clip-path: circle(150% at var(--x) var(--y)); }
 
-        #sun-blind.active {
-            opacity: 1;
-            clip-path: circle(150% at var(--x) var(--y));
-        }
-
-        /* Animasi Judul Turun */
+        /* Animasi Header Turun */
         header { 
             padding: 80px 20px 40px; 
             transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.8s;
@@ -50,17 +62,16 @@
             opacity: 0;
         }
         header.visible { transform: translateY(0); opacity: 1; }
-
         header h1 { font-weight: 300; letter-spacing: 4px; text-shadow: 0 4px 15px rgba(0,0,0,0.6); margin: 0; }
 
-        .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; }
 
         /* Grid & Item Naik */
         .file-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 15px;
-            margin-bottom: 150px;
+            margin-bottom: 120px;
         }
 
         .file-item {
@@ -76,13 +87,10 @@
             align-items: center;
             transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
             opacity: 0; 
-            transform: translateY(60px); /* Standby di bawah */
-            position: relative;
+            transform: translateY(60px);
         }
 
-        /* Saat di-scroll atau awal muncul */
         .file-item.visible { opacity: 1; transform: translateY(0); }
-
         .file-item:active { transform: scale(0.9) !important; background: white; }
 
         .file-number {
@@ -91,8 +99,7 @@
         }
         .file-name { font-size: 14px; pointer-events: none; text-transform: capitalize; }
 
-        /* Footer & Info */
-        footer { padding: 60px 20px; background: rgba(0, 0, 0, 0.8); font-size: 12px; }
+        footer { padding: 60px 20px; background: rgba(0, 0, 0, 0.85); font-size: 12px; position: relative; }
         footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
         #clock, #date {
@@ -102,10 +109,12 @@
         }
         #clock { left: 15px; }
         #date { right: 15px; }
-
     </style>
 </head>
 <body oncontextmenu="return false;">
+
+    <div id="bg-container"></div>
+    <div id="bg-overlay"></div>
 
     <div id="sun-blind"></div>
 
@@ -150,72 +159,50 @@
 
         const grid = document.getElementById('fileGrid');
         const sunBlind = document.getElementById('sun-blind');
-        const header = document.getElementById('header');
+        const bgContainer = document.getElementById('bg-container');
 
         // Render Cards
-        files.forEach((file) => {
+        files.forEach((f) => {
             const item = document.createElement('div');
             item.className = 'file-item';
-            item.innerHTML = `<span class="file-number">${file.id}</span><span class="file-name">${file.name}</span>`;
-            
-            // Logika Klik + Efek Matahari
-            item.addEventListener('click', (e) => {
-                const x = e.clientX;
-                const y = e.clientY;
-                sunBlind.style.setProperty('--x', x + 'px');
-                sunBlind.style.setProperty('--y', y + 'px');
+            item.innerHTML = `<span class="file-number">${f.id}</span><span class="file-name">${f.name}</span>`;
+            item.onclick = (e) => {
+                sunBlind.style.setProperty('--x', e.clientX + 'px');
+                sunBlind.style.setProperty('--y', e.clientY + 'px');
                 sunBlind.classList.add('active');
-
-                setTimeout(() => {
-                    window.open(file.url, '_blank');
-                    setTimeout(() => { sunBlind.classList.remove('active'); }, 600);
-                }, 500);
-            });
-
+                setTimeout(() => { window.open(f.url, '_blank'); setTimeout(() => sunBlind.classList.remove('active'), 600); }, 500);
+            };
             grid.appendChild(item);
         });
 
-        // Intersection Observer untuk Animasi Scroll
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else {
-                    // Animasi balik saat scroll ke atas
-                    entry.target.classList.remove('visible');
-                }
-            });
-        }, observerOptions);
+        // Intersection Observer
+        const obs = new IntersectionObserver((es) => {
+            es.forEach(e => { e.target.classList.toggle('visible', e.isIntersecting); });
+        }, { threshold: 0.1 });
 
-        // Amati Header dan Semua Item File
-        observer.observe(header);
-        document.querySelectorAll('.file-item').forEach(el => observer.observe(el));
+        obs.observe(document.getElementById('header'));
+        document.querySelectorAll('.file-item').forEach(el => obs.observe(el));
 
-        // Background
+        // Background Cycler (Diperbaiki untuk elemen bg-container)
         const wallpapers = Array.from({length: 11}, (_, i) => `../img/papayang${i+1}.png`);
         let wpIndex = 0;
         function changeBG() {
-            document.body.style.backgroundImage = `url('${wallpapers[wpIndex]}')`;
+            bgContainer.style.backgroundImage = `url('${wallpapers[wpIndex]}')`;
             wpIndex = (wpIndex + 1) % wallpapers.length;
         }
         setInterval(changeBG, 7000); changeBG();
 
-        // Clock
+        // Clock & Date
         function updateTime() {
-            const now = new Date();
-            document.getElementById('clock').innerText = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-            document.getElementById('date').innerText = now.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
+            const n = new Date();
+            document.getElementById('clock').innerText = n.getHours().toString().padStart(2, '0') + ":" + n.getMinutes().toString().padStart(2, '0');
+            document.getElementById('date').innerText = n.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
         }
         setInterval(updateTime, 1000); updateTime();
-        
-        // Mencegah klik saat scroll berat
-        let isScrolling;
-        window.addEventListener('scroll', () => {
-            document.body.classList.add('is-scrolling');
-            clearTimeout(isScrolling);
-            isScrolling = setTimeout(() => { document.body.classList.remove('is-scrolling'); }, 150);
-        });
+
+        // Anti Copy
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => { if (e.ctrlKey && ['s','u','i'].includes(e.key.toLowerCase())) e.preventDefault(); if (e.keyCode === 123) e.preventDefault(); });
     </script>
 </body>
 </html>
