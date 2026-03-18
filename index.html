@@ -2,232 +2,160 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
-    <title>Halaman Auliaaa</title>
-    <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Terkunci!!</title>
+    
+    <meta property="og:title" content="Halaman Terkunci!! 🔐">
+    <meta property="og:description" content="Haii Ayangg! Masukkan kata sandi dulu ya untuk masuk ke halaman ini.. ❤️">
+    <meta property="og:image" content="https://kkykrnwn.github.io/icon.ico">
+    <meta property="og:type" content="website">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="300">
+    <meta property="og:image:height" content="300">
+
+    <link rel="shortcut icon" type="image/x-icon" href="./img/icon.ico">
 
     <style>
-        :root {
-            --glass: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --accent: #89cff0;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
+        /* CSS tetap sama seperti kode kamu sebelumnya */
         body {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0; padding: 0; color: white; text-align: center;
-            min-height: 100vh;
-            user-select: none; -webkit-user-select: none;
-            background-color: #000;
-            overflow-x: hidden;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #222 url('./img/papayang.png') no-repeat center center/cover;
+            overflow: hidden;
         }
-
-        /* SISTEM DOUBLE BUFFERING BACKGROUND */
-        .bg-layer {
-            position: fixed;
-            top: -5%; left: -5%;
-            width: 110%; height: 110%;
-            z-index: -3;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transform: translateZ(0);
-            transition: opacity 1.5s ease-in-out; /* Durasi fade yang halus */
-        }
-
-        #bg-1 { opacity: 1; }
-        #bg-2 { opacity: 0; }
-
-        #bg-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: -1;
-        }
-
-        #sun-blind {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; opacity: 0; pointer-events: none; z-index: 9999;
-            clip-path: circle(0% at 50% 50%);
-            transition: opacity 0.2s ease, clip-path 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        #sun-blind.active { opacity: 1; clip-path: circle(150% at var(--x) var(--y)); }
-
-        header { 
-            padding: 80px 20px 40px; 
-            transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.8s;
-            transform: translateY(-50px);
-            opacity: 0;
-            will-change: transform, opacity;
-        }
-        header.visible { transform: translateY(0); opacity: 1; }
-        header h1 { font-weight: 300; letter-spacing: 4px; text-shadow: 0 4px 15px rgba(0,0,0,0.6); margin: 0; }
-
-        .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; }
-
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 15px;
-            margin-bottom: 120px;
-        }
-
-        .file-item {
-            background: var(--glass);
+        /* ... sisa CSS kamu ... */
+        .container {
+            background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
             border-radius: 15px;
-            padding: 25px 10px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.7s ease-out;
-            opacity: 0; 
-            transform: translateY(40px);
-            will-change: transform, opacity;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
         }
-
-        .file-item.visible { opacity: 1; transform: translateY(0); }
-        .file-item:active { transform: scale(0.92) !important; background: white; transition: 0.1s; }
-
-        .file-number {
-            font-size: 10px; background: var(--accent); color: #000;
-            padding: 2px 8px; border-radius: 10px; font-weight: bold; margin-bottom: 10px;
-        }
-        .file-name { font-size: 14px; pointer-events: none; text-transform: capitalize; }
-
-        footer { padding: 10px 20px; background: rgba(0, 0, 0, 0.85); font-size: 12px; position: relative; }
-        footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
-
-        #clock, #date {
-            position: fixed; bottom: 15px; font-size: 11px; color: var(--accent);
-            background: rgba(0,0,0,0.6); padding: 6px 15px; border-radius: 20px;
-            backdrop-filter: blur(8px); z-index: 1000; border: 1px solid var(--glass-border);
-        }
-        #clock { left: 15px; }
-        #date { right: 15px; }
+        h2 { color: #fff; font-weight: 600; margin-bottom: 20px; }
+        .password-wrapper { position: relative; display: flex; align-items: center; }
+        input { width: 100%; padding: 12px; padding-right: 45px; border: none; border-radius: 8px; font-size: 16px; background: rgba(255, 255, 255, 0.2); color: #fff; outline: none; }
+        .eye-icon { position: absolute; right: 12px; cursor: pointer; width: 22px; height: 22px; fill: white; opacity: 0.8; }
+        .hidden { display: none; }
+        button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 8px; background: linear-gradient(to right, #ff416c, #ff4b2b); color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .error { color: #ff4b2b; font-size: 14px; margin-top: 10px; opacity: 0; transition: opacity 0.5s; }
+        .error.show { opacity: 1; }
+        .popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #28a745; color: white; padding: 20px; border-radius: 8px; z-index: 100; }
+        .countdown { color: #fff; font-size: 16px; font-weight: bold; margin-top: 10px; display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-    <div id="bg-1" class="bg-layer"></div>
-    <div id="bg-2" class="bg-layer"></div>
-    
-    <div id="bg-overlay"></div>
-    <div id="sun-blind"></div>
-
-    <header id="header">
-        <h1>Aulia's Library</h1>
-    </header>
-
-    <div class="main-container">
-        <div class="file-grid" id="fileGrid"></div>
-    </div>
-
-    <footer>
-        <p>Copyright © 2026 All Rights Reserved.<br>
-        Designed by <a href="https://instagram.com/kky_krnwn331" target="_blank">Kikyy</a> untuk 
-        <a href="https://instagram.com/liaagsttn" target="_blank">Auliaa</a></p>
-    </footer>
-
-    <div id="clock">00:00</div>
-    <div id="date">...</div>
-
-    <script>
-        const files = [
-            { id: 1, name: "aku pelupa", url: "cobabagi.html" }, { id: 2, name: "aku takut😖", url: "akutakut.html" },
-            { id: 3, name: "apakah pernah?", url: "apakahpernah.html" }, { id: 4, name: "asal kamu tau", url: "asalkamutau.html" },
-            { id: 5, name: "ayang apa?", url: "kamuapa.html" }, { id: 6, name: "boleh gak?", url: "buatkamuaja.html" },
-            { id: 7, name: "boro boro", url: "boroboro.html" }, { id: 8, name: "buat sayangkuu", url: "buatsayangku.html" },
-            { id: 9, name: "cemunguttt", url: "cemungut.html" }, { id: 10, name: "challenge", url: "challenge.html" },
-            { id: 11, name: "coba tebakk", url: "cobatebak.html" }, { id: 12, name: "hadiah terbesarku", url: "hadiahterbesar.html" },
-            { id: 13, name: "haii ayangg", url: "haibuatkamu.html" }, { id: 14, name: "jika nanti", url: "jikananti.html" },
-            { id: 15, name: "kalo ada", url: "kaloada.html" }, { id: 16, name: "maaf 🥺", url: "maaf.html" },
-            { id: 17, name: "maaf jika", url: "maafjika.html" }, { id: 18, name: "maaf yaaa", url: "dibacadong.html" },
-            { id: 19, name: "makasii", url: "terimakasih.html" }, { id: 20, name: "makasii yaa", url: "dibacayuk.html" },
-            { id: 21, name: "mau nanya nihh", url: "untukmu.html" }, { id: 22, name: "melupakanmu?", url: "akupanik.html" },
-            { id: 23, name: "memory game", url: "memorygame.html" }, { id: 24, name: "minta thr 😋", url: "akuminta.html" },
-            { id: 25, name: "penghargaan", url: "hanyabuatmu.html" }, { id: 26, name: "pesan buat ayang", url: "pesanbuatayang.html" },
-            { id: 27, name: "pesan buat ayangg", url: "dariku.html" }, { id: 28, name: "pilih warna apa?", url: "heikm.html" },
-            { id: 29, name: "pilih mana hayoo", url: "sayangi.html" }, { id: 30, name: "pokoknya", url: "pokoknya.html" },
-            { id: 31, name: "sayang bangett", url: "sygbanget.html" }, { id: 32, name: "sayang sama aku?", url: "bukabentarya.html" },
-            { id: 33, name: "semangatt", url: "semangat.html" }, { id: 34, name: "sesuatu buat ayang", url: "heibuka.html" },
-            { id: 35, name: "Simsalabim!! 🥳", url: "hitungan.html" }, { id: 36, name: "tangkap", url: "tangkap.html" }
-        ];
-
-        const grid = document.getElementById('fileGrid');
-        const sunBlind = document.getElementById('sun-blind');
+<div class="container">
+    <h2>Login</h2>
+    <div class="password-wrapper">
+        <input type="password" id="password" 
+               placeholder="Masukkan kata sandi..." 
+               onkeypress="handleKeyPress(event)"
+               autocomplete="off" 
+               spellcheck="false" 
+               autocorrect="off" 
+               autocapitalize="none">
         
-        // Setup Grid
-        files.forEach((f) => {
-            const item = document.createElement('div');
-            item.className = 'file-item';
-            item.innerHTML = `<span class="file-number">${f.id}</span><span class="file-name">${f.name}</span>`;
-            item.onclick = (e) => {
-                sunBlind.style.setProperty('--x', e.clientX + 'px');
-                sunBlind.style.setProperty('--y', e.clientY + 'px');
-                sunBlind.classList.add('active');
-                setTimeout(() => { window.open(f.url, '_blank'); setTimeout(() => sunBlind.classList.remove('active'), 600); }, 500);
-            };
-            grid.appendChild(item);
-        });
+        <svg id="eyeOpen" class="eye-icon" onclick="togglePassword()" viewBox="0 0 24 24">
+            <path d="M12 4.5C7 4.5 2.7 8 1 12c1.7 4 6 7.5 11 7.5s9.3-3.5 11-7.5c-1.7-4-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+        </svg>
 
-        // Observer Stabil
-        const obs = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                } else if (entry.boundingClientRect.top > 0) {
-                    entry.target.classList.remove('visible');
-                }
-            });
-        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+        <svg id="eyeClosed" class="eye-icon hidden" onclick="togglePassword()" viewBox="0 0 24 24">
+            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+        </svg>
+    </div>
+    <button onclick="validatePassword()">Masuk</button>
+    <p id="error-message" class="error"></p>
+    <p id="countdown" class="countdown"></p>
+</div>
 
-        obs.observe(document.getElementById('header'));
-        document.querySelectorAll('.file-item').forEach(el => obs.observe(el));
+<audio id="countdown-sound" loop>
+    <source src="https://kkykrnwn.github.io/script-bucin/mp3/alarm.mp3" type="audio/wav">
+</audio>
 
-        // LOGIKA TRANSISI BACKGROUND ANTI-KEDIP
-        const wallpapers = Array.from({length: 11}, (_, i) => `../img/papayang${i+1}.png`);
-        let wpIndex = 0;
-        const bg1 = document.getElementById('bg-1');
-        const bg2 = document.getElementById('bg-2');
-        let currentBG = bg1;
+<div id="success-popup" class="popup hidden">
+    <p>Selamat datang sayangg🤍</p>
+</div>
 
-        function changeBG() {
-            const nextBG = (currentBG === bg1) ? bg2 : bg1;
-            const imgURL = wallpapers[wpIndex];
+<script>
+    // Script tetap sama seperti kode kamu sebelumnya
+    (function () {
+        window.onpageshow = function(event) {
+            if (event.persisted) { window.location.reload(); }
+        };
+    })();
 
-            // Preload gambar secara diam-diam
-            const img = new Image();
-            img.src = imgURL;
-            img.onload = () => {
-                nextBG.style.backgroundImage = `url('${imgURL}')`;
-                
-                // Mulai transisi
-                currentBG.style.opacity = "0";
-                nextBG.style.opacity = "1";
-                
-                // Tukar status
-                currentBG = nextBG;
-                wpIndex = (wpIndex + 1) % wallpapers.length;
-            };
+    window.onload = function() {
+        document.getElementById("password").value = "";
+    };
+
+    let attempts = 0;
+    const maxAttempts = 4;
+    const correctPassword = "auliapunyakiky";
+
+    function handleKeyPress(e) {
+        if (e.key === "Enter") validatePassword();
+    }
+
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const eyeOpen = document.getElementById("eyeOpen");
+        const eyeClosed = document.getElementById("eyeClosed");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeOpen.classList.add("hidden");
+            eyeClosed.classList.remove("hidden");
+        } else {
+            passwordInput.type = "password";
+            eyeOpen.classList.remove("hidden");
+            eyeClosed.classList.add("hidden");
         }
+    }
 
-        // Jalankan pertama kali
-        bg1.style.backgroundImage = `url('${wallpapers[0]}')`;
-        wpIndex = 1;
-        setInterval(changeBG, 7000);
+    function validatePassword() {
+        const passwordInput = document.getElementById("password");
+        const errorMessage = document.getElementById("error-message");
+        const countdownMessage = document.getElementById("countdown");
+        const audio = document.getElementById("countdown-sound");
+        const button = document.querySelector("button");
 
-        function updateTime() {
-            const n = new Date();
-            document.getElementById('clock').innerText = n.getHours().toString().padStart(2, '0') + ":" + n.getMinutes().toString().padStart(2, '0');
-            document.getElementById('date').innerText = n.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
+        if (passwordInput.value.trim() === correctPassword) {
+            errorMessage.textContent = "✅ Kata sandi benar!";
+            errorMessage.classList.add("show");
+            document.getElementById("success-popup").classList.remove("hidden");
+            setTimeout(() => { window.location.href = "./file/utama.html"; }, 2000);
+        } else {
+            attempts++;
+            errorMessage.textContent = `❌ Salah! Sisa: ${maxAttempts - attempts}`;
+            errorMessage.classList.add("show");
+            passwordInput.value = "";
+            if (attempts >= maxAttempts) {
+                passwordInput.disabled = true;
+                button.disabled = true;
+                countdownMessage.style.display = "block";
+                audio.play();
+                let count = 10;
+                let timer = setInterval(() => {
+                    countdownMessage.textContent = `Mengalihkan dalam ${count}...`;
+                    if (count <= 0) {
+                        clearInterval(timer);
+                        audio.pause();
+                        window.location.href = "https://www.instagram.com/kky_krnwn331";
+                    }
+                    count--;
+                }, 1000);
+            }
         }
-        setInterval(updateTime, 1000); updateTime();
-    </script>
+    }
+</script>
 </body>
 </html>
