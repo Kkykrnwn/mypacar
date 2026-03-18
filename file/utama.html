@@ -29,7 +29,18 @@
             margin: 0;
             padding: 0;
             transition: background-image 0.5s ease-in-out; /* Efek transisi halus */
-        }
+            
+/* Mencegah seleksi teks dan drag pada gambar */
+    -webkit-user-select: none;  /* Chrome, Safari, Opera */
+    -moz-user-select: none;     /* Firefox */
+    -ms-user-select: none;      /* IE/Edge */
+    user-select: none;          /* Standard */
+    -webkit-touch-callout: none; /* Mencegah menu konteks di iOS (Save Image) */
+}
+
+img {
+    pointer-events: none;       /* Gambar tidak bisa diklik/di-drag */
+}
 
         /* Header */
         header {
@@ -190,8 +201,6 @@
     z-index: 9999;
 }
 
-
-
     </style>
 </head>
 <body>
@@ -206,148 +215,219 @@
         <ul>
             <li>
                 1 
-                <a href="akupanik.html" target="_blank">
-                    <button class="transparent-button">melupakanmu?</button>
-                </a>
-            </li>
-            <li>
-                2
-                <a href="buatkamuaja.html" target="_blank">
-                    <button class="transparent-button">boleh gak?</button>
-                </a>
-            </li>
-            <li>
-                3 
-                <a href="bukabentarya.html" target="_blank">
-                    <button class="transparent-button">sayang sama aku?</button>
-                </a>
-            </li>
-            <li>
-                4
-                <a href="dibacadong.html" target="_blank">
-                    <button class="transparent-button">maaf yaaa</button>
-                </a>
-            </li>
-            <li>
-                5 
-                <a href="heikm.html" target="_blank">
-                    <button class="transparent-button">pilih warna apa?</button>
-                </a>
-            </li>
-            <li>
-                6 
-                <a href="kaloada.html" target="_blank">
-                    <button class="transparent-button">kalo ada</button>
-                </a>
-            </li>
-            <li>
-                7 
-                <a href="akutakut.html" target="_blank">
-                    <button class="transparent-button">aku takut😖</button>
-                </a>
-            </li>
-            <li>
-                8 
-                <a href="apakahpernah.html" target="_blank">
-                    <button class="transparent-button">apakah pernah?</button>
-                </a>
-            </li>
-            <li>
-                9 
-                <a href="asalkamutau.html" target="_blank">
-                    <button class="transparent-button">asal kamu tau</button>
-                </a>
-            </li>
-            <li>
-                10
-                <a href="boroboro.html" target="_blank">
-                    <button class="transparent-button">boro boro</button>
-                </a>
-            </li>
-            <li>
-                11 
-                <a href="buatsayangku.html" target="_blank">
-                    <button class="transparent-button">buat sayangkuu</button>
-                </a>
-            </li>
-            <li>
-                12 
                 <a href="cobabagi.html" target="_blank">
                     <button class="transparent-button">aku pelupa</button>
                 </a>
             </li>
             <li>
-
+                2 
+                <a href="akutakut.html" target="_blank">
+                    <button class="transparent-button">aku takut😖</button>
+                </a>
+            </li>
+            <li>
+                3 
+                <a href="apakahpernah.html" target="_blank">
+                    <button class="transparent-button">apakah pernah?</button>
+                </a>
+            </li>
+            <li>
+                4 
+                <a href="asalkamutau.html" target="_blank">
+                    <button class="transparent-button">asal kamu tau</button>
+                </a>
+            </li>
+            <li>
+                5 
+                <a href="kamuapa.html" target="_blank">
+                    <button class="transparent-button">ayang apa?</button>
+                </a>
+            </li>
+            <li>
+                6 
+                <a href="buatkamuaja.html" target="_blank">
+                    <button class="transparent-button">boleh gak?</button>
+                </a>
+            </li>
+            <li>
+                7 
+                <a href="boroboro.html" target="_blank">
+                    <button class="transparent-button">boro boro</button>
+                </a>
+            </li>
+            <li>
+                8 
+                <a href="buatsayangku.html" target="_blank">
+                    <button class="transparent-button">buat sayangkuu</button>
+                </a>
+            </li>
+            <li>
+                9 
+                <a href="cemungut.html" target="_blank">
+                    <button class="transparent-button">cemunguttt</button>
+                </a>
+            </li>
+            <li>
+                10 
+                <a href="challenge.html" target="_blank">
+                    <button class="transparent-button">challenge</button>
+                </a>
+            </li>
+            <li>
+                11 
+                <a href="cobatebak.html" target="_blank">
+                    <button class="transparent-button">coba tebakk</button>
+                </a>
+            </li>
+            <li>
+                12 
+                <a href="hadiahterbesar.html" target="_blank">
+                    <button class="transparent-button">hadiah terbesarku</button>
+                </a>
+            </li>
+            <li>
                 13 
+                <a href="haibuatkamu.html" target="_blank">
+                    <button class="transparent-button">haii ayangg</button>
+                </a>
+            </li>
+            <li>
+                14 
+                <a href="jikananti.html" target="_blank">
+                    <button class="transparent-button">jika nanti</button>
+                </a>
+            </li>
+            <li>
+                15 
+                <a href="kaloada.html" target="_blank">
+                    <button class="transparent-button">kalo ada</button>
+                </a>
+            </li>
+            <li>
+                16 
+                <a href="maaf.html" target="_blank">
+                    <button class="transparent-button">maaf 🥺</button>
+                </a>
+            </li>
+            <li>
+                17 
+                <a href="maafjika.html" target="_blank">
+                    <button class="transparent-button">maaf jika</button>
+                </a>
+            </li>
+            <li>
+                18 
+                <a href="dibacadong.html" target="_blank">
+                    <button class="transparent-button">maaf yaaa</button>
+                </a>
+            </li>
+            <li>
+                19 
+                <a href="terimakasih.html" target="_blank">
+                    <button class="transparent-button">makasii</button>
+                </a>
+            </li>
+            <li>
+                20 
+                <a href="dibacayuk.html" target="_blank">
+                    <button class="transparent-button">makasii yaa</button>
+                </a>
+            </li>
+            <li>
+                21 
+                <a href="untukmu.html" target="_blank">
+                    <button class="transparent-button">mau nanya nihh</button>
+                </a>
+            </li>
+            <li>
+                22 
+                <a href="akupanik.html" target="_blank">
+                    <button class="transparent-button">melupakanmu?</button>
+                </a>
+            </li>
+            <li>
+                23 
+                <a href="memorygame.html" target="_blank">
+                    <button class="transparent-button">memory game</button>
+                </a>
+            </li>
+            <li>
+                24 
+                <a href="akuminta.html" target="_blank">
+                    <button class="transparent-button">minta thr 😋</button>
+                </a>
+            </li>
+            <li>
+                25 
+                <a href="hanyabuatmu.html" target="_blank">
+                    <button class="transparent-button">penghargaan</button>
+                </a>
+            </li>
+            <li>
+                26 
+                <a href="pesanbuatayang.html" target="_blank">
+                    <button class="transparent-button">pesan buat ayang</button>
+                </a>
+            </li>
+            <li>
+                27 
 
                 <a href="dariku.html" target="_blank">
                     <button class="transparent-button">pesan buat ayangg</button>
                 </a>
             </li>
             <li>
-                14
-                <a href="dibacayuk.html" target="_blank">
-                    <button class="transparent-button">makasii yaa</button>
+                28 
+                <a href="heikm.html" target="_blank">
+                    <button class="transparent-button">pilih warna apa?</button>
                 </a>
             </li>
             <li>
-                15 
-                <a href="haibuatkamu.html" target="_blank">
-                    <button class="transparent-button">haii ayangg</button>
-                </a>
-            </li>
-            <li>
-                16
-                <a href="heibuka.html" target="_blank">
-                    <button class="transparent-button">sesuatu buat ayang</button>
-                </a>
-            </li>
-            <li>
-                17 
-                <a href="jikananti.html" target="_blank">
-                    <button class="transparent-button">jika nanti</button>
-                </a>
-            </li>
-            <li>
-                18 
-                <a href="kamuapa.html" target="_blank">
-                    <button class="transparent-button">ayang apa?</button>
-                </a>
-            </li>
-            <li>
-                19 
-                <a href="maafjika.html" target="_blank">
-                    <button class="transparent-button">maaf jika</button>
-                </a>
-            </li>
-            <li>
-                20 
-                <a href="hadiahterbesar.html" target="_blank">
-                    <button class="transparent-button">hadiah terbesarku</button>
-                </a>
-            </li>
-            <li>
-                21 
+                29 
                 <a href="sayangi.html" target="_blank">
                     <button class="transparent-button">pilih mana hayoo</button>
                 </a>
             </li>
             <li>
-                22
+                30 
+                <a href="pokoknya.html" target="_blank">
+                    <button class="transparent-button">pokoknya</button>
+                </a>
+            </li>
+            <li>
+                31 
                 <a href="sygbanget.html" target="_blank">
                     <button class="transparent-button">sayang bangett</button>
                 </a>
             </li>
             <li>
-                23 
-                <a href="terimakasih.html" target="_blank">
-                    <button class="transparent-button">makasii</button>
+                32 
+                <a href="bukabentarya.html" target="_blank">
+                    <button class="transparent-button">sayang sama aku?</button>
                 </a>
             </li>
             <li>
-                24 
-                <a href="untukmu.html" target="_blank">
-                    <button class="transparent-button">mau nanya nihh</button>
+                33 
+                <a href="semangat.html" target="_blank">
+                    <button class="transparent-button">semangatt</button>
+                </a>
+            </li>
+            <li>
+                34 
+                <a href="heibuka.html" target="_blank">
+                    <button class="transparent-button">sesuatu buat ayang</button>
+                </a>
+            </li>
+            <li>
+                35 
+                <a href="hitungan.html" target="_blank">
+                    <button class="transparent-button">Simsalabim!! 🥳</button>
+                </a>
+            </li>
+            <li>
+                36 
+                <a href="tangkap.html" target="_blank">
+                    <button class="transparent-button">tangkap</button>
                 </a>
             </li>
         </ul>
@@ -485,4 +565,4 @@
 
     </script>
 </body>
-</html>
+    </html>
