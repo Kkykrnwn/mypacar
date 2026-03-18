@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
     <title>Halaman Auliaaa</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/img/icon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../img/icon.ico">
 
     <style>
         :root {
-            --glass: rgba(255, 255, 255, 0.12);
+            --glass: rgba(255, 255, 255, 0.2);
             --glass-border: rgba(255, 255, 255, 0.2);
             --accent: #89cff0;
         }
@@ -20,29 +20,34 @@
             margin: 0; padding: 0; color: white; text-align: center;
             min-height: 100vh;
             user-select: none; -webkit-user-select: none;
-            background-color: #000; /* Cadangan jika gambar belum dimuat */
+            background-color: #000;
+            overflow-x: hidden;
         }
 
-        /* PERBAIKAN BACKGROUND: Diam total & No-Gap */
+        /* Background Dasar - Diam Total */
         #bg-container {
             position: fixed;
-            top: -5%; left: -5%;
-            width: 110%; height: 110%; /* Lebih besar sedikit untuk cegah blank putih saat bounce scroll */
-            z-index: -2;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: -3;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             transition: background-image 1.2s ease-in-out;
-            will-change: background-image;
-            transform: translateZ(0); /* Optimasi GPU */
+            transform: translateZ(0);
         }
 
-        /* Overlay Gelap yang ikut diam */
-        #bg-overlay {
+        /* Overlay Blur - Ini yang sedikit bergerak/fleksibel saat scroll */
+        #bg-blur-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.45);
-            z-index: -1;
+            top: -2%; left: -2%;
+            width: 104%; height: 104%;
+            z-index: -2;
+            backdrop-filter: blur(0.5px);
+            -webkit-backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s cubic-bezier(0.1, 1, 0.3, 1);
+            pointer-events: none;
         }
 
         /* Efek Matahari Buta */
@@ -54,19 +59,20 @@
         }
         #sun-blind.active { opacity: 1; clip-path: circle(150% at var(--x) var(--y)); }
 
-        /* Animasi Header Turun */
+        /* Animasi Header */
         header { 
             padding: 80px 20px 40px; 
             transition: transform 0.8s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.8s;
-            transform: translateY(-50px);
+            transform: translateY(-30px);
             opacity: 0;
+            will-change: transform, opacity;
         }
         header.visible { transform: translateY(0); opacity: 1; }
         header h1 { font-weight: 300; letter-spacing: 4px; text-shadow: 0 4px 15px rgba(0,0,0,0.6); margin: 0; }
 
         .main-container { max-width: 1000px; margin: 0 auto; padding: 20px; position: relative; }
 
-        /* Grid & Item Naik */
+        /* Grid System */
         .file-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -74,6 +80,7 @@
             margin-bottom: 120px;
         }
 
+        /* Item File - Perbaikan Transisi agar tidak getar */
         .file-item {
             background: var(--glass);
             backdrop-filter: blur(10px);
@@ -85,13 +92,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+            transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.7s ease-out;
             opacity: 0; 
-            transform: translateY(60px);
+            transform: translateY(40px);
+            will-change: transform, opacity;
         }
 
         .file-item.visible { opacity: 1; transform: translateY(0); }
-        .file-item:active { transform: scale(0.9) !important; background: white; }
+        .file-item:active { transform: scale(0.92) !important; background: white; transition: 0.1s; }
 
         .file-number {
             font-size: 10px; background: var(--accent); color: #000;
@@ -99,7 +107,12 @@
         }
         .file-name { font-size: 14px; pointer-events: none; text-transform: capitalize; }
 
-        footer { padding: 60px 20px; background: rgba(0, 0, 0, 0.85); font-size: 12px; position: relative; }
+        footer { 
+          padding: 10px 20px; 
+          background: rgba(0, 0, 0, 0.85); 
+          font-size: 12px; 
+          position: relative;
+          width: 100%; }
         footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
         #clock, #date {
@@ -114,8 +127,7 @@
 <body oncontextmenu="return false;">
 
     <div id="bg-container"></div>
-    <div id="bg-overlay"></div>
-
+    <div id="bg-blur-overlay"></div>
     <div id="sun-blind"></div>
 
     <header id="header">
@@ -127,7 +139,7 @@
     </div>
 
     <footer>
-        <p>Copyright © 2025 All Rights Reserved.<br>
+        <p>Copyright © 2026 All Rights Reserved.<br>
         Designed by <a href="https://instagram.com/kky_krnwn331" target="_blank">Kikyy</a> untuk 
         <a href="https://instagram.com/liaagsttn" target="_blank">Auliaa</a></p>
     </footer>
@@ -160,6 +172,7 @@
         const grid = document.getElementById('fileGrid');
         const sunBlind = document.getElementById('sun-blind');
         const bgContainer = document.getElementById('bg-container');
+        const blurOverlay = document.getElementById('bg-blur-overlay');
 
         // Render Cards
         files.forEach((f) => {
@@ -175,15 +188,32 @@
             grid.appendChild(item);
         });
 
-        // Intersection Observer
+        // Stabilizer Intersection Observer (Cegah Getar)
         const obs = new IntersectionObserver((es) => {
-            es.forEach(e => { e.target.classList.toggle('visible', e.isIntersecting); });
-        }, { threshold: 0.1 });
+            es.forEach(e => { 
+                // Gunakan threshold yang lebih pasti untuk mencegah flickering
+                if(e.isIntersecting) {
+                    e.target.classList.add('visible');
+                } else if (e.boundingClientRect.top > 0) {
+                    // Hanya hapus class jika elemen keluar ke arah bawah layar
+                    e.target.classList.remove('visible');
+                }
+            });
+        }, { 
+            threshold: 0.05,
+            rootMargin: "0px 0px -50px 0px" // Memberikan sedikit ruang napas di bawah
+        });
 
         obs.observe(document.getElementById('header'));
         document.querySelectorAll('.file-item').forEach(el => obs.observe(el));
 
-        // Background Cycler (Diperbaiki untuk elemen bg-container)
+        // Background Bergerak Sedikit (Parallax Blur)
+        window.addEventListener('scroll', () => {
+            const scrollVal = window.scrollY;
+            blurOverlay.style.transform = `translateY(${scrollVal * 0.05}px)`;
+        });
+
+        // Background Cycler
         const wallpapers = Array.from({length: 11}, (_, i) => `../img/papayang${i+1}.png`);
         let wpIndex = 0;
         function changeBG() {
@@ -199,10 +229,6 @@
             document.getElementById('date').innerText = n.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
         }
         setInterval(updateTime, 1000); updateTime();
-
-        // Anti Copy
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => { if (e.ctrlKey && ['s','u','i'].includes(e.key.toLowerCase())) e.preventDefault(); if (e.keyCode === 123) e.preventDefault(); });
     </script>
 </body>
 </html>
