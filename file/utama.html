@@ -24,18 +24,21 @@
             overflow-x: hidden;
         }
 
-        #bg-container {
+        /* SISTEM DOUBLE BUFFERING BACKGROUND */
+        .bg-layer {
             position: fixed;
             top: -5%; left: -5%;
             width: 110%; height: 110%;
-            z-index: -2;
+            z-index: -3;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            transition: background-image 1.2s ease-in-out;
-            will-change: background-image;
             transform: translateZ(0);
+            transition: opacity 1.5s ease-in-out; /* Durasi fade yang halus */
         }
+
+        #bg-1 { opacity: 1; }
+        #bg-2 { opacity: 0; }
 
         #bg-overlay {
             position: fixed;
@@ -82,7 +85,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* Transisi diperhalus agar tidak kaku */
             transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.7s ease-out;
             opacity: 0; 
             transform: translateY(40px);
@@ -98,7 +100,7 @@
         }
         .file-name { font-size: 14px; pointer-events: none; text-transform: capitalize; }
 
-        footer { padding: 40px 20px; background: rgba(0, 0, 0, 0.85); font-size: 12px; position: relative; }
+        footer { padding: 10px 20px; background: rgba(0, 0, 0, 0.85); font-size: 12px; position: relative; }
         footer a { color: var(--accent); text-decoration: none; font-weight: bold; }
 
         #clock, #date {
@@ -112,7 +114,9 @@
 </head>
 <body oncontextmenu="return false;">
 
-    <div id="bg-container"></div>
+    <div id="bg-1" class="bg-layer"></div>
+    <div id="bg-2" class="bg-layer"></div>
+    
     <div id="bg-overlay"></div>
     <div id="sun-blind"></div>
 
@@ -157,8 +161,8 @@
 
         const grid = document.getElementById('fileGrid');
         const sunBlind = document.getElementById('sun-blind');
-        const bgContainer = document.getElementById('bg-container');
-
+        
+        // Setup Grid
         files.forEach((f) => {
             const item = document.createElement('div');
             item.className = 'file-item';
@@ -172,35 +176,51 @@
             grid.appendChild(item);
         });
 
-        // PERBAIKAN STABILITAS: Menggunakan margin negatif agar transisi tidak flicker
+        // Observer Stabil
         const obs = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Tombol muncul
                     entry.target.classList.add('visible');
-                } else {
-                    // Hanya hilangkan animasi jika elemen berada DI BAWAH layar (saat scroll naik)
-                    // Ini mencegah getar saat elemen berada di batas atas layar
-                    if (entry.boundingClientRect.top > 0) {
-                        entry.target.classList.remove('visible');
-                    }
+                } else if (entry.boundingClientRect.top > 0) {
+                    entry.target.classList.remove('visible');
                 }
             });
-        }, { 
-            threshold: 0.1,
-            rootMargin: "0px 0px -50px 0px" // Memberikan toleransi 50px di bagian bawah
-        });
+        }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
 
         obs.observe(document.getElementById('header'));
         document.querySelectorAll('.file-item').forEach(el => obs.observe(el));
 
+        // LOGIKA TRANSISI BACKGROUND ANTI-KEDIP
         const wallpapers = Array.from({length: 11}, (_, i) => `../img/papayang${i+1}.png`);
         let wpIndex = 0;
+        const bg1 = document.getElementById('bg-1');
+        const bg2 = document.getElementById('bg-2');
+        let currentBG = bg1;
+
         function changeBG() {
-            bgContainer.style.backgroundImage = `url('${wallpapers[wpIndex]}')`;
-            wpIndex = (wpIndex + 1) % wallpapers.length;
+            const nextBG = (currentBG === bg1) ? bg2 : bg1;
+            const imgURL = wallpapers[wpIndex];
+
+            // Preload gambar secara diam-diam
+            const img = new Image();
+            img.src = imgURL;
+            img.onload = () => {
+                nextBG.style.backgroundImage = `url('${imgURL}')`;
+                
+                // Mulai transisi
+                currentBG.style.opacity = "0";
+                nextBG.style.opacity = "1";
+                
+                // Tukar status
+                currentBG = nextBG;
+                wpIndex = (wpIndex + 1) % wallpapers.length;
+            };
         }
-        setInterval(changeBG, 7000); changeBG();
+
+        // Jalankan pertama kali
+        bg1.style.backgroundImage = `url('${wallpapers[0]}')`;
+        wpIndex = 1;
+        setInterval(changeBG, 7000);
 
         function updateTime() {
             const n = new Date();
@@ -208,9 +228,6 @@
             document.getElementById('date').innerText = n.toLocaleDateString('id-ID', {weekday:'short', day:'numeric', month:'short'});
         }
         setInterval(updateTime, 1000); updateTime();
-
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => { if (e.ctrlKey && ['s','u','i'].includes(e.key.toLowerCase())) e.preventDefault(); if (e.keyCode === 123) e.preventDefault(); });
     </script>
 </body>
 </html>
