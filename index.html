@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0">
+    <title>Halaman Aulia</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="./img/icon.ico">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://kkykrnwn.github.io/mypacar" />
+  <meta property="og:title" content="Halaman Aulia!!" />
+  <meta property="og:description" content="Khusus untuk Auliaaa tercinta. 
+Silakan masukkan kata sandi untuk masuk ke pustaka media." />
+  <meta property="og:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://kkykrnwn.github.io/mypacar" />
+  <meta property="twitter:title" content="Halaman Aulia" />
+  <meta property="twitter:description" content="Khusus untuk Auliaaa tercinta. 
+Silakan masukkan kata sandi untuk masuk ke pustaka media." />
+  <meta property="twitter:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #222 url('./img/papayang.png') no-repeat center center/cover;
+            overflow: hidden;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 1s ease-in-out;
+            transition: transform 0.3s ease;
+        }
+
+        h2 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .password-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            padding-right: 45px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .eye-icon {
+            position: absolute;
+            right: 0px; /* Diubah ke 0 karena area luar sudah diperbesar oleh border */
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+            fill: white;
+            opacity: 0.8;
+            
+            /* TRICK: Memperbesar radius klik (hitbox) aman tanpa merusak estetika mata */
+            box-sizing: content-box;
+            padding: 15px; 
+            
+            /* Animasi transisi yang smooth saat muncul / hilang */
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.2s ease;
+            will-change: transform, opacity;
+        }
+
+        /* Efek pop-bounce lembut saat ikon mata ditekan */
+        .eye-icon:active {
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+
+        /* Efek animasi transisi saat mata dicoret/disembunyikan */
+        .hidden {
+            opacity: 0 !important;
+            transform: scale(0.4) rotate(-45deg) !important;
+            pointer-events: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .error {
+            color: #ff4b2b;
+            font-size: 14px;
+            margin-top: 10px;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .error.show {
+            opacity: 1;
+        }
+
+        .countdown {
+            color: #fff;
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* ANIMASI */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            50% {
+                transform: translateX(8px);
+            }
+
+            75% {
+                transform: translateX(-8px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        /* --- UPDATE POP-UP SUKSES BENING AGAK HIJAU --- */
+        .popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate3d(-50%, -50%, 0) scale(0.85);
+            opacity: 0;
+            /* Menggunakan hijau transparan (r: 34, g: 139, b: 34) */
+            background: rgba(34, 139, 34, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            color: #fff;
+            padding: 25px 40px;
+            border-radius: 15px;
+            z-index: 1000;
+            /* Border bening kehijauan */
+            border: 1px solid rgba(144, 238, 144, 0.4);
+            /* Efek pendaran hijau tipis yang estetik */
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(144, 238, 144, 0.2);
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.4s ease;
+            pointer-events: none;
+            will-change: transform, opacity;
+        }
+
+        /* Struktur teks di dalam popup */
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .popup h3 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .popup p {
+            margin: 0;
+            font-size: 13px;
+            color: rgba(200, 255, 200, 0.85); /* Putih dengan sentuhan hijau terang tipis */
+        }
+
+        /* Class pemicu saat pop-up aktif */
+        .popup.show {
+            opacity: 1;
+            transform: translate3d(-50%, -50%, 0) scale(1);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="mainContainer">
+        <h2>Login</h2>
+        <div class="password-wrapper">
+            <input type="password" id="password" placeholder="Masukkan kata sandi..." onkeypress="handleKeyPress(event)" autocomplete="off" spellcheck="false">
+
+            <svg id="eyeOpen" class="eye-icon hidden" onmousedown="event.preventDefault(); togglePassword();" ontouchstart="event.preventDefault(); togglePassword();" viewBox="0 0 24 24">
+                <path d="M12 4.5C7 4.5 2.7 8 1 12c1.7 4 6 7.5 11 7.5s9.3-3.5 11-7.5c-1.7-4-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z" />
+            </svg>
+
+            <svg id="eyeClosed" class="eye-icon" onmousedown="event.preventDefault(); togglePassword();" ontouchstart="event.preventDefault(); togglePassword();" viewBox="0 0 24 24">
+                <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z" />
+            </svg>
+        </div>
+        <button id="loginBtn" onclick="validatePassword()">Masuk</button>
+        <p id="error-message" class="error"></p>
+        <p id="countdown" class="countdown"></p>
+    </div>
+
+    <audio id="countdown-sound" loop>
+        <source src="./mp3/alarm.mp3" type="audio/wav">
+    </audio>
+
+    <div id="success-popup" class="popup">
+        <div class="popup-content">
+            <h3>Akses Diterima</h3>
+            <p>Memuat pustaka media, mohon tunggu...</p>
+        </div>
+    </div>
+
+    <script>
+        let attempts = 0;
+        const maxAttempts = 4;
+        const correctPassword = "auliapunyakiky";
+
+        function handleKeyPress(e) {
+            if (e.key === "Enter") validatePassword();
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const eyeOpen = document.getElementById("eyeOpen");
+            const eyeClosed = document.getElementById("eyeClosed");
+
+        //untuk membalik fungsi buka tutup mata, add dan remove dibalik
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeOpen.classList.remove("hidden");
+                eyeClosed.classList.add("hidden");
+            } else {
+                passwordInput.type = "password";
+                eyeOpen.classList.add("hidden");
+                eyeClosed.classList.remove("hidden");
+            }
+        }
+
+        function triggerShake() {
+            const container = document.getElementById("mainContainer");
+            container.classList.add("shake");
+            setTimeout(() => container.classList.remove("shake"), 400);
+        }
+
+        function validatePassword() {
+            const passwordInput = document.getElementById("password");
+            const errorMessage = document.getElementById("error-message");
+            const countdownMessage = document.getElementById("countdown");
+            const audio = document.getElementById("countdown-sound");
+            const button = document.getElementById("loginBtn");
+
+            // Ambil value dan hapus spasi
+            let inputVal = passwordInput.value.trim();
+
+            // JIKA KOSONG (Hanya spasi atau tidak diisi)
+            if (inputVal === "") {
+                errorMessage.textContent = "⚠️ Isi dulu sandinya sayangg!";
+                errorMessage.classList.add("show");
+                triggerShake();
+                passwordInput.value = ""; // Bersihkan spasi jika ada
+                return; // Keluar fungsi, tidak menambah limit salah
+            }
+
+            // JIKA BENAR
+            if (inputVal === correctPassword) {
+                errorMessage.textContent = "✅ Akses diverifikasi!";
+                errorMessage.classList.add("show");
+                
+                // --- TAMBAHKAN BARIS INI DI SINI ---
+                localStorage.setItem("sesiLoginAktif", "baru_login");
+                // ------------------------------------
+
+                // Memicu animasi pop-up profesional secara smooth
+                const successPopup = document.getElementById("success-popup");
+                setTimeout(() => {
+                    successPopup.classList.add("show");
+                }, 100);
+
+                setTimeout(() => {
+                    window.location.href = "./file/utama.html";
+                }, 2200);
+            }
+
+            // JIKA SALAH
+            else {
+                attempts++;
+                triggerShake();
+                errorMessage.textContent = `❌ Salah! Sisa percobaan: ${maxAttempts - attempts}`;
+                errorMessage.classList.add("show");
+                passwordInput.value = "";
+
+            }
+                if (attempts >= maxAttempts) {
+                    errorMessage.textContent = "🚨 Terlalu banyak percobaan! Anda akan dialihkan ke Instagram developer...";
+                    let countdown = 10;
+                    countdownMessage.style.display = "block";
+                    countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
+
+                    passwordInput.disabled = true;
+                    button.disabled = true;
+
+                    // --- TRICK BOOSTER VOLUME 3X LIPAT MENGGUNAKAN WEB AUDIO API ---
+                    try {
+                        const AudioContext = window.AudioContext || window.webkitAudioContext;
+                        const audioCtx = new AudioContext();
+                        const source = audioCtx.createMediaElementSource(audio);
+                        
+                        // Buat penguat sinyal (Gain Node)
+                        const gainNode = audioCtx.createGain();
+                        gainNode.gain.value = 5.0; // Menggandakan amplitudo suara sebesar 3x lipat
+                        
+                        // Hubungkan: Audio Asli -> Penguat -> Speaker Utama
+                        source.connect(gainNode);
+                        gainNode.connect(audioCtx.destination);
+                    } catch (e) {
+                        console.log("Web Audio API tidak didukung browser ini, memutar volume normal.");
+                    }
+
+                    // Memulai audio dengan sinyal yang sudah dibooster
+                    audio.play();
+
+                    let interval = setInterval(() => {
+                        countdown--;
+                        countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
+                        if (countdown <= 0) {
+                            clearInterval(interval);
+                            audio.pause(); 
+                            window.location.href = "https://www.instagram.com/kky_krnwn331?igsh=MW9yZnF6YXY2YmsxZg==";
+                        }
+                    }, 1000);
+                }
+        }
+
+        // Reset input saat reload
+        window.onload = () => {
+            document.getElementById("password").value = "";
+        };
+
+        // --- FITUR AUTO-RESET SAAT TOMBOL BACK DIKLIK (ANTI-CACHE) ---
+        window.addEventListener("pageshow", (event) => {
+            // Jika halaman dimuat ulang dari cache browser (efek tombol kembali/back)
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                // Paksa halaman untuk refresh total seperti baru dibuka
+                window.location.reload();
+            }
+        });
+
+    </script>
+</body>
+
+</html>
