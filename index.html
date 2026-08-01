@@ -8,22 +8,33 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="./img/icon.ico">
   
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kkykrnwn.github.io/mypacar" />
-  <meta property="og:title" content="Halaman Aulia!!" />
-  <meta property="og:description" content="Khusus untuk Auliaaa tercinta. 
-Silakan masukkan kata sandi untuk masuk ke pustaka media." />
-  <meta property="og:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://kkykrnwn.github.io/mypacar" />
-  <meta property="twitter:title" content="Halaman Aulia" />
-  <meta property="twitter:description" content="Khusus untuk Auliaaa tercinta. 
-Silakan masukkan kata sandi untuk masuk ke pustaka media." />
-  <meta property="twitter:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kkykrnwn.github.io/mypacar" />
+    <meta property="og:title" content="Halaman Aulia!!" />
+    <meta property="og:description" content="Khusus untuk Auliaaa tercinta. Silakan masukkan kata sandi untuk masuk ke pustaka media." />
+    <meta property="og:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://kkykrnwn.github.io/mypacar" />
+    <meta property="twitter:title" content="Halaman Aulia" />
+    <meta property="twitter:description" content="Khusus untuk Auliaaa tercinta. Silakan masukkan kata sandi untuk masuk ke pustaka media." />
+    <meta property="twitter:image" content="https://kkykrnwn.github.io/mypacar/img/pratinjau.webp" />
 
     <style>
+        :root {
+            --lamp-shade: #f5f0e6;
+            --lamp-base: #d1ccc2;
+            --glow-color: rgba(255, 214, 110, 0.35);
+            --accent-color: #d4a373;
+            --on: 0;
+            --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -33,9 +44,94 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             margin: 0;
             background: #222 url('./img/papayang.png') no-repeat center center/cover;
             overflow: hidden;
+            position: relative;
+            transition: background-color var(--transition);
         }
 
+        /* Ambient Glow Overlay saat lampu menyala */
+        body::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 80% 20%, var(--glow-color), transparent 70%);
+            opacity: var(--on);
+            transition: opacity var(--transition);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Overlay Gelap saat Lampu Mati */
+        body::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: calc(1 - var(--on));
+            transition: opacity var(--transition);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Lampu di Pojok Kanan Atas */
+        .lamp-wrapper {
+            position: absolute;
+            top: 0px;
+            right: 20px;
+            width: 140px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .lamp-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .lamp-shade {
+            fill: var(--lamp-shade);
+            transition: fill var(--transition);
+        }
+
+        [data-on="true"] .lamp-shade {
+            fill: #fff;
+            filter: drop-shadow(0 0 25px rgba(255, 255, 200, 0.9));
+        }
+
+        .lamp-base {
+            fill: var(--lamp-base);
+        }
+
+        .inner-glow {
+            fill: #ffdb8a;
+            opacity: 0;
+            filter: blur(12px);
+            transition: opacity var(--transition);
+        }
+
+        [data-on="true"] .inner-glow {
+            opacity: 0.8;
+        }
+
+        .cord-line {
+            stroke: #ddd;
+            stroke-width: 2;
+        }
+
+        .cord-bead {
+            fill: var(--accent-color);
+        }
+
+        .cord-hit {
+            cursor: pointer;
+        }
+
+        /* Login Container Tetap di Tengah Presisi */
         .container {
+            position: relative;
+            z-index: 2;
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -44,8 +140,17 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             width: 320px;
             text-align: center;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 1s ease-in-out;
-            transition: transform 0.3s ease;
+            transition: opacity 0.5s ease, filter 0.5s ease;
+            
+            /* Redup saat Lampu Mati */
+            opacity: 0.35;
+            filter: brightness(0.6);
+        }
+
+        /* Aktif Penuh saat Lampu Nyala */
+        body[data-on="true"] .container {
+            opacity: 1;
+            filter: brightness(1);
         }
 
         h2 {
@@ -58,6 +163,7 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             position: relative;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         input {
@@ -72,35 +178,34 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             outline: none;
         }
 
+        /* Mematikan pointer events khusus input saat lampu mati agar klik dialihkan ke wrapper */
+        body[data-on="false"] input {
+            pointer-events: none;
+        }
+
         input::placeholder {
             color: rgba(255, 255, 255, 0.6);
         }
 
         .eye-icon {
             position: absolute;
-            right: 0px; /* Diubah ke 0 karena area luar sudah diperbesar oleh border */
+            right: 0px; 
             cursor: pointer;
             width: 22px;
             height: 22px;
             fill: white;
             opacity: 0.8;
-            
-            /* TRICK: Memperbesar radius klik (hitbox) aman tanpa merusak estetika mata */
             box-sizing: content-box;
             padding: 15px; 
-            
-            /* Animasi transisi yang smooth saat muncul / hilang */
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.2s ease;
             will-change: transform, opacity;
         }
 
-        /* Efek pop-bounce lembut saat ikon mata ditekan */
         .eye-icon:active {
             transform: scale(0.8);
             opacity: 0.5;
         }
 
-        /* Efek animasi transisi saat mata dicoret/disembunyikan */
         .hidden {
             opacity: 0 !important;
             transform: scale(0.4) rotate(-45deg) !important;
@@ -130,7 +235,7 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             font-size: 14px;
             margin-top: 10px;
             opacity: 0;
-            transition: 0.3s;
+            transition: opacity 0.3s ease;
         }
 
         .error.show {
@@ -145,69 +250,39 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             display: none;
         }
 
-        /* ANIMASI */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
+        /* ANIMASI SHAKE */
         @keyframes shake {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-8px);
-            }
-
-            50% {
-                transform: translateX(8px);
-            }
-
-            75% {
-                transform: translateX(-8px);
-            }
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
         }
 
         .shake {
             animation: shake 0.4s ease-in-out;
         }
 
-        /* --- UPDATE POP-UP SUKSES BENING AGAK HIJAU --- */
+        /* POP-UP UMUM */
         .popup {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate3d(-50%, -50%, 0) scale(0.85);
             opacity: 0;
-            /* Menggunakan hijau transparan (r: 34, g: 139, b: 34) */
-            background: rgba(34, 139, 34, 0.25);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             color: #fff;
-            padding: 25px 40px;
+            padding: 25px 35px;
             border-radius: 15px;
             z-index: 1000;
-            /* Border bening kehijauan */
-            border: 1px solid rgba(144, 238, 144, 0.4);
-            /* Efek pendaran hijau tipis yang estetik */
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(144, 238, 144, 0.2);
             text-align: center;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.3s ease;
             pointer-events: none;
             will-change: transform, opacity;
+            max-width: 85vw;
+            width: 340px;
         }
 
-        /* Struktur teks di dalam popup */
         .popup-content {
             display: flex;
             flex-direction: column;
@@ -217,32 +292,81 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
 
         .popup h3 {
             margin: 0;
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .popup p {
             margin: 0;
             font-size: 13px;
-            color: rgba(200, 255, 200, 0.85); /* Putih dengan sentuhan hijau terang tipis */
+            line-height: 1.5;
         }
 
-        /* Class pemicu saat pop-up aktif */
         .popup.show {
             opacity: 1;
             transform: translate3d(-50%, -50%, 0) scale(1);
         }
 
+        /* POP-UP SUKSES (HIJAU) */
+        #success-popup {
+            background: rgba(34, 139, 34, 0.25);
+            border: 1px solid rgba(144, 238, 144, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 15px rgba(144, 238, 144, 0.2);
+        }
+
+        #success-popup p {
+            color: rgba(200, 255, 200, 0.85);
+        }
+
+        /* POP-UP PERINGATAN LAMPU (AMBER / EMAS ELEGAN) */
+        #lamp-popup {
+            background: rgba(212, 163, 115, 0.22);
+            border: 1px solid rgba(255, 214, 110, 0.45);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 214, 110, 0.25);
+        }
+
+        #lamp-popup h3 {
+            color: #ffdb8a;
+        }
+
+        #lamp-popup p {
+            color: rgba(255, 245, 225, 0.9);
+        }
+
+        @media (max-width: 480px) {
+            .lamp-wrapper {
+                right: 5px;
+                width: 120px;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body data-on="false">
 
+    <!-- Komponen Lampu Gantung Kecil di Kanan Atas -->
+    <div class="lamp-wrapper">
+        <svg class="lamp-svg" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+            <ellipse class="inner-glow" cx="100" cy="110" rx="60" ry="30" />
+            <rect class="lamp-base" x="92" y="100" width="16" height="160" rx="8" />
+            <rect class="lamp-base" x="60" y="250" width="80" height="12" rx="6" />
+
+            <g class="pull-cord">
+                <line class="cord-line" x1="130" y1="110" x2="130" y2="180" />
+                <circle class="cord-bead" cx="130" cy="190" r="6" />
+                <circle class="cord-hit" cx="130" cy="190" r="40" fill="transparent" />
+            </g>
+
+            <path class="lamp-shade" d="M30 110 C 30 50, 170 50, 170 110 C 170 125, 30 125, 30 110 Z" />
+        </svg>
+    </div>
+
+    <!-- Form Login Utama (Tepat di Tengah Layar) -->
     <div class="container" id="mainContainer">
         <h2>Login</h2>
-        <div class="password-wrapper">
-            <input type="password" id="password" placeholder="Masukkan kata sandi..." onkeypress="handleKeyPress(event)" autocomplete="off" spellcheck="false">
+        <div class="password-wrapper" onclick="handleInputClick()">
+            <input type="password" id="password" placeholder="Masukkan kata sandi..." onkeypress="handleKeyPress(event)" oninput="clearErrorMessage()" autocomplete="off" spellcheck="false" disabled>
 
             <svg id="eyeOpen" class="eye-icon hidden" onmousedown="event.preventDefault(); togglePassword();" ontouchstart="event.preventDefault(); togglePassword();" viewBox="0 0 24 24">
                 <path d="M12 4.5C7 4.5 2.7 8 1 12c1.7 4 6 7.5 11 7.5s9.3-3.5 11-7.5c-1.7-4-6-7.5-11-7.5zm0 12.5c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z" />
@@ -261,6 +385,7 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
         <source src="./mp3/alarm.mp3" type="audio/wav">
     </audio>
 
+    <!-- Popup Akses Diterima -->
     <div id="success-popup" class="popup">
         <div class="popup-content">
             <h3>Akses Diterima</h3>
@@ -268,10 +393,25 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
         </div>
     </div>
 
+    <!-- Popup Peringatan Lampu Elegan -->
+    <div id="lamp-popup" class="popup">
+        <div class="popup-content">
+            <h3>💡 Lampu Belum Dinyalakan</h3>
+            <p>Harap tarik tali lampu di pojok kanan atas untuk menyalakan penerangan sebelum memasukkan kata sandi.</p>
+        </div>
+    </div>
+
+    <!-- GSAP Libraries untuk Fitur Lampu Tarik -->
+    <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>
+
     <script>
+        // --- LOGIKA UTAMA SCRIPT LOGIN ---
         let attempts = 0;
         const maxAttempts = 4;
         const correctPassword = "auliapunyakiky";
+        let lampPopupTimeout;
+        let errorMessageTimeout;
 
         function handleKeyPress(e) {
             if (e.key === "Enter") validatePassword();
@@ -282,7 +422,6 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             const eyeOpen = document.getElementById("eyeOpen");
             const eyeClosed = document.getElementById("eyeClosed");
 
-        //untuk membalik fungsi buka tutup mata, add dan remove dibalik
             if (passwordInput.type === "password") {
                 passwordInput.type = "text";
                 eyeOpen.classList.remove("hidden");
@@ -300,35 +439,71 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
             setTimeout(() => container.classList.remove("shake"), 400);
         }
 
+        /* Tampilkan Pesan Error dengan Otomatis Hilang setelah 3 Detik */
+        function showErrorMessage(text) {
+            const errorMessage = document.getElementById("error-message");
+            errorMessage.textContent = text;
+            errorMessage.classList.add("show");
+
+            // Reset timer sebelumnya jika pesan error dipanggil berulang kali
+            clearTimeout(errorMessageTimeout);
+
+            // Sembunyikan otomatis setelah 3 detik (3000 ms)
+            errorMessageTimeout = setTimeout(() => {
+                clearErrorMessage();
+            }, 3000);
+        }
+
+        /* Bersihkan Pesan Error Secara Langsung */
+        function clearErrorMessage() {
+            const errorMessage = document.getElementById("error-message");
+            if (errorMessage.classList.contains("show")) {
+                errorMessage.classList.remove("show");
+                clearTimeout(errorMessageTimeout);
+            }
+        }
+
+        /* Tampilkan Popup Notifikasi Lampu saat Input Diklik saat Lampu Mati */
+        function handleInputClick() {
+            if (!isOn) {
+                const lampPopup = document.getElementById("lamp-popup");
+                triggerShake();
+
+                lampPopup.classList.add("show");
+
+                clearTimeout(lampPopupTimeout);
+                lampPopupTimeout = setTimeout(() => {
+                    lampPopup.classList.remove("show");
+                }, 4000);
+            }
+        }
+
         function validatePassword() {
+            if (!isOn) {
+                handleInputClick();
+                return;
+            }
+
             const passwordInput = document.getElementById("password");
             const errorMessage = document.getElementById("error-message");
             const countdownMessage = document.getElementById("countdown");
             const audio = document.getElementById("countdown-sound");
             const button = document.getElementById("loginBtn");
 
-            // Ambil value dan hapus spasi
             let inputVal = passwordInput.value.trim();
 
-            // JIKA KOSONG (Hanya spasi atau tidak diisi)
             if (inputVal === "") {
-                errorMessage.textContent = "⚠️ Isi dulu sandinya sayangg!";
-                errorMessage.classList.add("show");
+                showErrorMessage("⚠️ Isi dulu sandinya sayangg!");
                 triggerShake();
-                passwordInput.value = ""; // Bersihkan spasi jika ada
-                return; // Keluar fungsi, tidak menambah limit salah
+                passwordInput.value = ""; 
+                return; 
             }
 
-            // JIKA BENAR
             if (inputVal === correctPassword) {
-                errorMessage.textContent = "✅ Akses diverifikasi!";
-                errorMessage.classList.add("show");
+                showErrorMessage("✅ Akses diverifikasi!");
                 
-                // --- TAMBAHKAN BARIS INI DI SINI ---
                 localStorage.setItem("sesiLoginAktif", "baru_login");
-                // ------------------------------------
 
-                // Memicu animasi pop-up profesional secara smooth
                 const successPopup = document.getElementById("success-popup");
                 setTimeout(() => {
                     successPopup.classList.add("show");
@@ -338,72 +513,130 @@ Silakan masukkan kata sandi untuk masuk ke pustaka media." />
                     window.location.href = "./file/utama.html";
                 }, 2200);
             }
-
-            // JIKA SALAH
             else {
                 attempts++;
                 triggerShake();
-                errorMessage.textContent = `❌ Salah! Sisa percobaan: ${maxAttempts - attempts}`;
-                errorMessage.classList.add("show");
+                showErrorMessage(`❌ Salah! Sisa percobaan: ${maxAttempts - attempts}`);
                 passwordInput.value = "";
-
             }
-                if (attempts >= maxAttempts) {
-                    errorMessage.textContent = "🚨 Terlalu banyak percobaan! Anda akan dialihkan ke Instagram developer...";
-                    let countdown = 10;
-                    countdownMessage.style.display = "block";
-                    countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
 
-                    passwordInput.disabled = true;
-                    button.disabled = true;
+            if (attempts >= maxAttempts) {
+                clearTimeout(errorMessageTimeout);
+                errorMessage.textContent = "🚨 Terlalu banyak percobaan! Anda akan dialihkan ke Instagram developer...";
+                errorMessage.classList.add("show");
 
-                    // --- TRICK BOOSTER VOLUME 3X LIPAT MENGGUNAKAN WEB AUDIO API ---
-                    try {
-                        const AudioContext = window.AudioContext || window.webkitAudioContext;
-                        const audioCtx = new AudioContext();
-                        const source = audioCtx.createMediaElementSource(audio);
-                        
-                        // Buat penguat sinyal (Gain Node)
-                        const gainNode = audioCtx.createGain();
-                        gainNode.gain.value = 5.0; // Menggandakan amplitudo suara sebesar 3x lipat
-                        
-                        // Hubungkan: Audio Asli -> Penguat -> Speaker Utama
-                        source.connect(gainNode);
-                        gainNode.connect(audioCtx.destination);
-                    } catch (e) {
-                        console.log("Web Audio API tidak didukung browser ini, memutar volume normal.");
-                    }
+                let countdown = 10;
+                countdownMessage.style.display = "block";
+                countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
 
-                    // Memulai audio dengan sinyal yang sudah dibooster
-                    audio.play();
+                passwordInput.disabled = true;
+                button.disabled = true;
 
-                    let interval = setInterval(() => {
-                        countdown--;
-                        countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
-                        if (countdown <= 0) {
-                            clearInterval(interval);
-                            audio.pause(); 
-                            window.location.href = "https://www.instagram.com/kky_krnwn331?igsh=MW9yZnF6YXY2YmsxZg==";
-                        }
-                    }, 1000);
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    const audioCtx = new AudioContext();
+                    const source = audioCtx.createMediaElementSource(audio);
+                    
+                    const gainNode = audioCtx.createGain();
+                    gainNode.gain.value = 5.0; 
+                    
+                    source.connect(gainNode);
+                    gainNode.connect(audioCtx.destination);
+                } catch (e) {
+                    console.log("Web Audio API tidak didukung browser ini, memutar volume normal.");
                 }
+
+                audio.play();
+
+                let interval = setInterval(() => {
+                    countdown--;
+                    countdownMessage.textContent = `Mengalihkan dalam ${countdown} detik...`;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        audio.pause(); 
+                        window.location.href = "https://www.instagram.com/kky_krnwn331?igsh=MW9yZnF6YXY2YmsxZg==";
+                    }
+                }, 1000);
+            }
         }
 
-        // Reset input saat reload
         window.onload = () => {
             document.getElementById("password").value = "";
         };
 
-        // --- FITUR AUTO-RESET SAAT TOMBOL BACK DIKLIK (ANTI-CACHE) ---
         window.addEventListener("pageshow", (event) => {
-            // Jika halaman dimuat ulang dari cache browser (efek tombol kembali/back)
             if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
-                // Paksa halaman untuk refresh total seperti baru dibuka
                 window.location.reload();
             }
         });
 
+        // --- INTEGRASI SKRIP INTERAKTIF LAMPU ---
+        gsap.registerPlugin(Draggable);
+
+        const root = document.documentElement;
+        const body = document.body;
+        const passwordInput = document.getElementById("password");
+
+        const cordBead = document.querySelector(".cord-bead");
+        const cordLine = document.querySelector(".cord-line");
+        const hitArea = document.querySelector(".cord-hit");
+
+        let isOn = false;
+
+        const clickSound = new Audio("https://assets.codepen.io/605876/click.mp3");
+
+        Draggable.create(hitArea, {
+            type: "y",
+            bounds: {
+                minY: 0,
+                maxY: 60,
+            },
+            onDrag() {
+                gsap.set(cordBead, { y: this.y });
+                gsap.set(cordLine, {
+                    attr: { y2: 180 + this.y }
+                });
+            },
+            onRelease() {
+                if (this.y > 15) {
+                    toggleLamp();
+                }
+
+                gsap.to([cordBead, hitArea], {
+                    y: 0,
+                    duration: 0.5,
+                    ease: "back.out(2.5)",
+                });
+
+                gsap.to(cordLine, {
+                    attr: { y2: 180 },
+                    duration: 0.5,
+                    ease: "back.out(2.5)",
+                });
+            }
+        });
+
+        function toggleLamp() {
+            isOn = !isOn;
+            try {
+                clickSound.currentTime = 0;
+                clickSound.play();
+            } catch (e) {}
+
+            body.setAttribute("data-on", isOn);
+            root.style.setProperty("--on", isOn ? 1 : 0);
+
+            // Sembunyikan popup peringatan lampu secara langsung saat tali ditarik
+            document.getElementById("lamp-popup").classList.remove("show");
+
+            if (isOn) {
+                passwordInput.disabled = false;
+            } else {
+                passwordInput.blur();
+                passwordInput.disabled = true;
+                clearErrorMessage();
+            }
+        }
     </script>
 </body>
-
 </html>
