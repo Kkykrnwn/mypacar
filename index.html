@@ -33,6 +33,13 @@
 
         * {
             box-sizing: border-box;
+            /* Anti seleksi teks via CSS */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            /* Hilangkan highlight/kotak biru saat di-klik atau di-tap */
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -164,6 +171,7 @@
             display: flex;
             align-items: center;
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
         input {
@@ -176,6 +184,17 @@
             background: rgba(255, 255, 255, 0.2);
             color: #fff;
             outline: none;
+            -webkit-tap-highlight-color: transparent;
+            /* Izinkan seleksi teks terbatas di dalam input password */
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+        }
+
+        input:focus, input:active {
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* Mematikan pointer events khusus input saat lampu mati agar klik dialihkan ke wrapper */
@@ -199,6 +218,7 @@
             padding: 15px; 
             transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.2), opacity 0.2s ease;
             will-change: transform, opacity;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .eye-icon:active {
@@ -223,24 +243,35 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            outline: none;
             transition: 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus, button:active {
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         button:active {
             transform: scale(0.95);
         }
 
-        .error {
-            color: #ff4b2b;
-            font-size: 14px;
-            margin-top: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+.error {
+    color: #ff4b2b;
+    font-size: 14px;
+    margin-top: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.3s ease, max-height 0.3s ease, margin-top 0.3s ease;
+}
 
-        .error.show {
-            opacity: 1;
-        }
+.error.show {
+    opacity: 1;
+    max-height: 80px; /* Memberikan ruang untuk teks error */
+    margin-top: 10px;
+}
 
         .countdown {
             color: #fff;
@@ -406,6 +437,44 @@
     <script src="./js/Draggable.min.js"></script>
 
     <script>
+        // --- SCRIPT ANTI KLIK KANAN, ANTI SALIN, DAN ANTI INSPECT ELEMENT ---
+        // 1. Matikan Klik Kanan
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // 2. Matikan Seleksi Teks & Fitur Salin/Tempel
+        document.addEventListener('selectstart', (e) => e.preventDefault());
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+
+        // 3. Blokir Tombol Pintas Keyboard (F12, Ctrl+Shift+I, Ctrl+U, dll)
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 4. Proteksi Console & Debugger Loop
+        setInterval(() => {
+            console.clear();
+            const start = performance.now();
+            (function () {
+                return false;
+            })["constructor"]("debugger")();
+            const end = performance.now();
+            if (end - start > 100) {
+                console.clear();
+            }
+        }, 500);
+
         // --- LOGIKA UTAMA SCRIPT LOGIN ---
         let attempts = 0;
         const maxAttempts = 4;
@@ -439,31 +508,35 @@
             setTimeout(() => container.classList.remove("shake"), 400);
         }
 
-        /* Tampilkan Pesan Error dengan Otomatis Hilang setelah 3 Detik */
-        function showErrorMessage(text) {
-            const errorMessage = document.getElementById("error-message");
-            errorMessage.textContent = text;
-            errorMessage.classList.add("show");
+function showErrorMessage(text) {
+    const errorMessage = document.getElementById("error-message");
+    
+    clearTimeout(errorMessageTimeout); // Bersihkan timeout lama jika ada error beruntun
+    
+    errorMessage.textContent = text;
+    errorMessage.classList.add("show");
 
-            // Reset timer sebelumnya jika pesan error dipanggil berulang kali
-            clearTimeout(errorMessageTimeout);
+    errorMessageTimeout = setTimeout(() => {
+        clearErrorMessage();
+    }, 3000);
+}
 
-            // Sembunyikan otomatis setelah 3 detik (3000 ms)
-            errorMessageTimeout = setTimeout(() => {
-                clearErrorMessage();
-            }, 3000);
-        }
-
-        /* Bersihkan Pesan Error Secara Langsung */
-        function clearErrorMessage() {
-            const errorMessage = document.getElementById("error-message");
-            if (errorMessage.classList.contains("show")) {
-                errorMessage.classList.remove("show");
-                clearTimeout(errorMessageTimeout);
+function clearErrorMessage() {
+    const errorMessage = document.getElementById("error-message");
+    if (errorMessage.classList.contains("show")) {
+        errorMessage.classList.remove("show");
+        
+        // Hapus teks setelah animasi transisi pudar selesai (300ms)
+        setTimeout(() => {
+            if (!errorMessage.classList.contains("show")) {
+                errorMessage.textContent = "";
             }
-        }
+        }, 300);
+        
+        clearTimeout(errorMessageTimeout);
+    }
+}
 
-        /* Tampilkan Popup Notifikasi Lampu saat Input Diklik saat Lampu Mati */
         function handleInputClick() {
             if (!isOn) {
                 const lampPopup = document.getElementById("lamp-popup");
@@ -626,7 +699,6 @@
             body.setAttribute("data-on", isOn);
             root.style.setProperty("--on", isOn ? 1 : 0);
 
-            // Sembunyikan popup peringatan lampu secara langsung saat tali ditarik
             document.getElementById("lamp-popup").classList.remove("show");
 
             if (isOn) {
